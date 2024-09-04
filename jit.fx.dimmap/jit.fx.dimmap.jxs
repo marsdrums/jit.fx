@@ -1,0 +1,61 @@
+<jittershader name="default">
+	<description>Default Slab </description>
+	<param name="dummyTex" type="int" default="0" />
+	<param name="inTex" type="int" default="1" />
+	<param name="uv" type="vec2" state="TEXCOORD" />
+	<param name="texMat" type="mat4" state="TEXTURE0_MATRIX" />
+	<param name="map" type="vec2" default="0. 1." />
+	<param name="invert" type="vec2" default="0. 0." />
+	<language name="glsl" version="1.5">
+		<bind param="dummyTex" program="fp" />
+		<bind param="inTex" program="fp" />
+		<bind param="uv" program="vp" />
+		<bind param="texMat" program="vp" />
+		<bind param="map" program="fp" />
+		<bind param="invert" program="vp" />
+		<program name="vp" type="vertex"  >
+<![CDATA[
+#version 330 core
+
+in vec2 uv;
+uniform mat4 texMat;
+uniform vec2 invert;
+
+out jit_PerVertex {
+	vec2 uv;
+} jit_out;
+
+void main(void) {
+	gl_Position = vec4(uv*2 - 1, 0, 1);
+	jit_out.uv = (texMat * vec4(gl_Position.xy*invert*0.5 + vec2(0.5), 0, 1)).xy;
+}
+]]>
+</program>
+
+<program name="fp" type="fragment"  >
+<![CDATA[
+#version 330 core
+
+
+layout (location = 0) out vec4 outColor;
+
+uniform samplerJit0 dummyTex, inTex;
+uniform vec2 map;
+
+in jit_PerVertex {
+	vec2 uv;
+} jit_in;
+
+void main(void) {
+
+	if(map.x == 1 && map.y == 0){
+		outColor = texelFetch(inTex, ivec2(jit_in.uv.yx));
+	} else {
+		outColor = texelFetch(inTex, ivec2(jit_in.uv));
+	}
+	
+}
+]]>
+</program>
+</language>
+</jittershader>
