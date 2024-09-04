@@ -19,7 +19,6 @@
 
 in vec2 uv;
 uniform mat4 texMat;
-uniform vec2 ratio;
 
 out jit_PerVertex {
 	vec2 uv;
@@ -27,7 +26,7 @@ out jit_PerVertex {
 
 void main(void) {
 	gl_Position = vec4(uv*2 - 1, 0, 1);
-	jit_out.uv = (texMat * vec4(uv * ratio,0,1)).xy;
+	jit_out.uv = (texMat * vec4(uv,0,1)).xy;
 }
 ]]>
 </program>

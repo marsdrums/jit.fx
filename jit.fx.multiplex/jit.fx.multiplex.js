@@ -121,7 +121,7 @@ slab.inputs = 3;
 var _multiplexdim = 0;
 
 function multiplexdim(){
-	if(arguments[0] != 0 || arguments[0] != 1) return;
+	if(arguments[0] != 0 && arguments[0] != 1) return;
 	_multiplexdim = arguments[0];
 }
 
