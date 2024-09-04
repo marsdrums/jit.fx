@@ -1,4 +1,4 @@
-autowhatch = 1; inlets = 1; outlets = 1;
+autowhatch = 1; inlets = 2; outlets = 1;
 
 
 //______ GRAB CONTEXT ______________________________________________________________________
@@ -84,7 +84,9 @@ destroyFindCTX.local = 1;
 
 function notifydeleted() {
     destroyFindCTX();
-    inTex.freepeer();
+    texA.freepeer();
+    //texB.freepeer();
+    texDummy.freepeer();
     slab.freepeer();
 }
 /*
@@ -107,33 +109,38 @@ var swapCallback = function(event) {
 }
 */
 
-var _dim = [200, 200];
-var _offset = [0, 0];
 
-var inTex = new JitterObject("jit.gl.texture", drawto);
+var texA = new JitterObject("jit.gl.texture", drawto);
+//var texB = new JitterObject("jit.gl.texture", drawto);
+var texDummy = new JitterObject("jit.gl.texture", drawto);
 
 var slab = new JitterObject("jit.gl.slab", drawto);
-slab.file = "jit.fx.subtexture.jxs";
-slab.inputs = 1;
+slab.file = "jit.fx.multiplex.jxs";
+slab.inputs = 3;
 
-function dim(){
-	_dim = [ 	Math.max(1, arguments[0]), 
-				Math.max(1, arguments[1]) ];
-}
+var _multiplexdim = 0;
 
-function offset(){
-	_offset = [arguments[0], arguments[1]];
+function multiplexdim(){
+	if(arguments[0] != 0 || arguments[0] != 1) return;
+	_multiplexdim = arguments[0];
 }
 
 function jit_gl_texture(inname){
 
-	inTex.jit_gl_texture(inname);
+	if(inlet == 1){
+		slab.activeinput = 2;
+		slab.jit_gl_texture(inname);
 
-	slab.dimscale = [ _dim[0] / inTex.dim[0], _dim[1] / inTex.dim[1] ];
-	slab.param("ratio", slab.dimscale);
-	slab.param("offset", [ _offset[0], _offset[1] - inTex.dim[1] + _dim[1] ]);
-	slab.jit_gl_texture(inname);
-	slab.draw();
+	} else {
+		slab.activeinput = 1;
+		texA.jit_gl_texture(inname);
+		slab.jit_gl_texture(inname);
 
+		texDummy.dim = _multiplexdim == 1 ? [texA.dim[0], texA.dim[1]*2] : [texA.dim[0]*2, texA.dim[1]];
+		slab.param("multiplexdim", _multiplexdim);
+		slab.activeinput = 0;
+		slab.jit_gl_texture(texDummy.name);
+		slab.draw();
+	}
 	outlet(0, "jit_gl_texture", slab.out_name);
 }
