@@ -230,7 +230,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 43.0, 394.0, 383.0, 261.0 ],
+					"patching_rect" : [ 43.0, 394.0, 709.0, 452.0 ],
 					"sync" : 1
 				}
 
@@ -492,7 +492,7 @@
 
 			}
  ],
-		"originid" : "pat-239",
+		"originid" : "pat-245",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
