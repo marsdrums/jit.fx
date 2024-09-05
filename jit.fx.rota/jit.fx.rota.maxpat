@@ -163,17 +163,6 @@
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-23",
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 588.0, 434.0, 150.0, 20.0 ],
-					"text" : "0 - 4"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-21",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
@@ -265,7 +254,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 584.0, 147.0, 125.0, 79.0 ],
+					"patching_rect" : [ 584.0, 386.0, 125.0, 79.0 ],
 					"style" : "helpfile_label",
 					"text" : "0 = ignore (default)\r1 = clear\r2 = wrap\r3 = clip\r4 = fold"
 				}
