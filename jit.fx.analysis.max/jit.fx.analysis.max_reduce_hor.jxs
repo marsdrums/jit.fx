@@ -36,9 +36,9 @@ void main(void) {
 
 	vec4 a = texture(texIn, uv);
 	vec4 b = texture(texIn, uv + vec2(1, 0) );
-	outColor = vec4(	min(a.r, b.r),
-						min(a.g, b.g),
-						min(a.b, b.b),
+	outColor = vec4(	max(a.r, b.r),
+						max(a.g, b.g),
+						max(a.b, b.b),
 						1);
 
 }

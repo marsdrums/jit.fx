@@ -110,11 +110,11 @@ var swapCallback = function(event) {
 */
 
 var slab_hor = new JitterObject("jit.gl.slab", drawto);
-slab_hor.file = "jit.fx.analysis.min_reduce_hor.jxs";
+slab_hor.file = "jit.fx.analysis.mean_reduce_hor.jxs";
 slab_hor.inputs = 2;
 
 var slab_ver = new JitterObject("jit.gl.slab", drawto);
-slab_ver.file = "jit.fx.analysis.min_reduce_ver.jxs";
+slab_ver.file = "jit.fx.analysis.mean_reduce_ver.jxs";
 slab_ver.inputs = 2;
 
 var texIn = new JitterObject("jit.gl.texture", drawto);

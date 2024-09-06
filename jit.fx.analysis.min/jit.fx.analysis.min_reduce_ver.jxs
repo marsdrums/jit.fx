@@ -1,28 +1,22 @@
 <jittershader name="default">
 	<description>Default Slab </description>
-	<param name="texIn" type="int" default="0" />
-	<param name="texUV" type="int" default="1" />
+	<param name="dummyTex" type="int" default="0" />
+	<param name="texIn" type="int" default="1" />
 	<param name="uv" type="vec2" state="TEXCOORD" />
-	<param name="texMat" type="mat4" state="TEXTURE0_MATRIX" />
+	<param name="texDim" type="vec2" state="TEXDIM0" />
 	<language name="glsl" version="1.5">
+		<bind param="dummyTex" program="fp" />
 		<bind param="texIn" program="fp" />
-		<bind param="texUV" program="fp" />
 		<bind param="uv" program="vp" />
-		<bind param="texMat" program="vp" />
+		<bind param="texDim" program="fp" />
 		<program name="vp" type="vertex"  >
 <![CDATA[
 #version 330 core
 
 in vec2 uv;
-uniform mat4 texMat;
-
-out jit_PerVertex {
-	vec2 uv;
-} jit_out;
 
 void main(void) {
 	gl_Position = vec4(uv*2 - 1, 0, 1);
-	jit_out.uv = (texMat * vec4(uv,0,1)).xy;
 }
 ]]>
 </program>
@@ -31,36 +25,21 @@ void main(void) {
 <![CDATA[
 #version 330 core
 
-
 layout (location = 0) out vec4 outColor;
-//layout (location = 1) out vec4 outBestUV;
 
-uniform samplerJit0 texIn, texUV;
-
-in jit_PerVertex {
-	vec2 uv;
-} jit_in;
+uniform sampler2DRect dummyTex, texIn;
+uniform vec2 texDim;
 
 void main(void) {
 
-	//outBestUV = vec4(0); //dummy
+	vec2 uv = floor( vec2(gl_FragCoord.x, texDim.y - gl_FragCoord.y) * vec2(1,2) ) - vec2(-0.5, 0.5);
 
-	if(mod(floor(jit_in.uv.y), 2) == 1.0){
-		vec4 a = texelFetch(texIn, ivec2(jit_in.uv));
-		vec4 b = texelFetch(texIn, ivec2(jit_in.uv + vec2(0,1)));
-		outColor = vec4(	min(a.r, b.r),
-							min(a.g, b.g),
-							min(a.b, b.b),
-							1);
-
-	} else {
-		//vec4 a = texelFetch(texIn, ivec2(jit_in.uv));
-		//vec4 b = texelFetch(texIn, ivec2(jit_in.uv - vec2(0,1)));
-		//outColor = vec4(	min(a.r, b.r),
-		//					min(a.g, b.g),
-		//					min(a.b, b.b),
-		//					1);
-	}
+	vec4 a = texture(texIn, uv);
+	vec4 b = texture(texIn, uv + vec2(0, 1) );
+	outColor = vec4(	min(a.r, b.r),
+						min(a.g, b.g),
+						min(a.b, b.b),
+						1);
 
 }
 ]]>

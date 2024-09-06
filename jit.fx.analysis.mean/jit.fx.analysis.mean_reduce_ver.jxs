@@ -32,14 +32,11 @@ uniform vec2 texDim;
 
 void main(void) {
 
-	vec2 uv = floor( vec2(gl_FragCoord.x, texDim.y - gl_FragCoord.y) * vec2(2,1) ) - vec2(0.5, -0.5);
+	vec2 uv = floor( vec2(gl_FragCoord.x, texDim.y - gl_FragCoord.y) * vec2(1,2) ) - vec2(-0.5, 0.5);
 
 	vec4 a = texture(texIn, uv);
-	vec4 b = texture(texIn, uv + vec2(1, 0) );
-	outColor = vec4(	min(a.r, b.r),
-						min(a.g, b.g),
-						min(a.b, b.b),
-						1);
+	vec4 b = texture(texIn, uv + vec2(0, 1) );
+	outColor = (a+b)*0.5;
 
 }
 ]]>

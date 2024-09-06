@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 1017.0, 100.0, 707.0, 881.0 ],
+		"rect" : [ 754.0, 100.0, 707.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -79,20 +79,20 @@
 			}
 , 			{
 				"box" : 				{
-					"filename" : "jit.fx.analysis.min.js",
+					"filename" : "jit.fx.analysis.mean.js",
 					"id" : "obj-72",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 142.0, 147.0, 127.0, 22.0 ],
+					"patching_rect" : [ 142.0, 147.0, 138.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "v8 jit.fx.analysis.min.js",
+					"text" : "v8 jit.fx.analysis.mean.js",
 					"textfile" : 					{
-						"filename" : "jit.fx.analysis.min.js",
+						"filename" : "jit.fx.analysis.mean.js",
 						"flags" : 0,
 						"embed" : 0,
 						"autowatch" : 1
@@ -255,7 +255,7 @@
 
 			}
  ],
-		"originid" : "pat-2",
+		"originid" : "pat-8",
 		"dependency_cache" : [ 			{
 				"name" : "bball.mov",
 				"bootpath" : "C74:/media/jitter",
@@ -263,8 +263,8 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.fx.analysis.min.js",
-				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.analysis.min",
+				"name" : "jit.fx.analysis.mean.js",
+				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.analysis.mean",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1
