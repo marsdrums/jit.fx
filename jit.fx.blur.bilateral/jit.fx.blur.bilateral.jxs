@@ -58,15 +58,20 @@ void main(void) {
 
 	//declare stuff
 	const int kSize = (MSIZE-1)/2;
-	float kernel[MSIZE];
 	vec3 final_colour = vec3(0.0);
 	
 	//create the 1-D kernel
 	float Z = 0.0;
-	for (int j = 0; j <= kSize; ++j)
-	{
-		kernel[kSize+j] = kernel[kSize-j] = normpdf(float(j), SIGMA);
-	}
+	//for (int j = 0; j <= kSize; ++j)
+	//{
+	//	kernel[kSize+j] = kernel[kSize-j] = normpdf(float(j), SIGMA);
+	//}
+
+	const float kernel[MSIZE] = float[MSIZE]( 	0.031225216, 0.033322271, 0.035206333, 
+												0.036826804, 0.038138565, 0.039104044, 
+												0.039695028, 0.039894000, 0.039695028, 
+												0.039104044, 0.038138565, 0.036826804, 
+												0.035206333, 0.033322271, 0.031225216);
 	
 	
 	vec3 cc;
