@@ -138,7 +138,7 @@ function jit_gl_texture(inname){
 	
 	amt = _blur_amount; 
 
-	for(var i = 0; i < 6; i++){
+	for(var i = 0; i < 5; i++){
 
 		tile[0] = 128 * (i % 8);
 		tile[1] = 128 * Math.floor(i / 8);

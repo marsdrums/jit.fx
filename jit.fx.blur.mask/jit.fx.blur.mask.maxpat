@@ -175,7 +175,7 @@
 
 							}
  ],
-						"originid" : "pat-293"
+						"originid" : "pat-319"
 					}
 ,
 					"patching_rect" : [ 294.0, 219.0, 41.0, 22.0 ],
@@ -308,10 +308,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "chickens.mp4",
-								"filename" : "chickens.mp4",
+								"absolutepath" : "countdown.mov",
+								"filename" : "countdown.mov",
 								"filekind" : "moviefile",
-								"id" : "u070005254",
+								"id" : "u036012239",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -468,11 +468,11 @@
 
 			}
  ],
-		"originid" : "pat-289",
+		"originid" : "pat-317",
 		"dependency_cache" : [ 			{
-				"name" : "chickens.mp4",
+				"name" : "countdown.mov",
 				"bootpath" : "C74:/media/jitter",
-				"type" : "mpg4",
+				"type" : "MooV",
 				"implicit" : 1
 			}
 , 			{
