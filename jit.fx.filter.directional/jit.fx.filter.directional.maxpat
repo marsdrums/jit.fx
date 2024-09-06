@@ -175,20 +175,20 @@
 			}
 , 			{
 				"box" : 				{
-					"filename" : "jit.fx.blur.directional.js",
+					"filename" : "jit.fx.filter.directional.js",
 					"id" : "obj-72",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 29.0, 367.0, 139.0, 22.0 ],
+					"patching_rect" : [ 29.0, 367.0, 141.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "v8 jit.fx.blur.directional.js",
+					"text" : "v8 jit.fx.filter.directional.js",
 					"textfile" : 					{
-						"filename" : "jit.fx.blur.directional.js",
+						"filename" : "jit.fx.filter.directional.js",
 						"flags" : 0,
 						"embed" : 0,
 						"autowatch" : 1
@@ -397,7 +397,7 @@
 
 			}
  ],
-		"originid" : "pat-285",
+		"originid" : "pat-475",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
@@ -405,8 +405,8 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.fx.blur.directional.js",
-				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.blur.directional",
+				"name" : "jit.fx.filter.directional.js",
+				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.filter.directional",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1

@@ -174,20 +174,20 @@
 			}
 , 			{
 				"box" : 				{
-					"filename" : "jit.fx.blur.radial.js",
+					"filename" : "jit.fx.filter.radial.js",
 					"id" : "obj-72",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 29.0, 285.0, 113.0, 22.0 ],
+					"patching_rect" : [ 29.0, 285.0, 116.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "v8 jit.fx.blur.radial.js",
+					"text" : "v8 jit.fx.filter.radial.js",
 					"textfile" : 					{
-						"filename" : "jit.fx.blur.radial.js",
+						"filename" : "jit.fx.filter.radial.js",
 						"flags" : 0,
 						"embed" : 0,
 						"autowatch" : 1
@@ -403,7 +403,7 @@
 
 			}
  ],
-		"originid" : "pat-263",
+		"originid" : "pat-501",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
@@ -411,8 +411,8 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.fx.blur.radial.js",
-				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.blur.radial",
+				"name" : "jit.fx.filter.radial.js",
+				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.filter.radial",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1

@@ -84,8 +84,8 @@ destroyFindCTX.local = 1;
 
 function notifydeleted() {
     destroyFindCTX();
-    slab_ver.freepeer();
-    slab_hor.freepeer();
+    slab_rad.freepeer();
+    //slab_hor.freepeer();
     fdbkTex.freepeer();
 }
 /*
@@ -109,52 +109,62 @@ var swapCallback = function(event) {
 */
 
 
-var slab_ver = new JitterObject("jit.gl.slab", drawto);
-slab_ver.file = "jit.fx.blur.gaussian_vertical.jxs";
-slab_ver.inputs = 1;
-
-var slab_hor = new JitterObject("jit.gl.slab", drawto);
-slab_hor.file = "jit.fx.blur.gaussian_horizontal.jxs";
-slab_hor.inputs = 1;
+var slab_rad = new JitterObject("jit.gl.slab", drawto);
+slab_rad.file = "jit.fx.filter.directional.jxs";
+slab_rad.inputs = 1;
 
 var fdbkTex = new JitterObject("jit_gl_texture", drawto);
 fdbkTex.adapt = 1;
 
 var _blur_amount = 0;
-slab_ver.param("blur_amount", _blur_amount);
-slab_hor.param("blur_amount", _blur_amount);
+slab_rad.param("blur_amount", _blur_amount);
+
+var _direction = [1, 0];
+slab_rad.param("direction", _direction);
+
+var _angle = 0;
+
 
 function blur_amount(){ 
 	_blur_amount = arguments[0];
-
 }
 
-var tile = new Array(2);
+function normalize(x){
+	var l = Math.sqrt(x[0]*x[0] + x[1]*x[1]);
+	return [x[0]/l, x[1]/l];
+}
+
+function direction(){ 
+	_direction = normalize([ arguments[0], arguments[1] ]);
+	slab_rad.param("direction", _direction);
+}
+
+function angle(){
+	var a = -Math.PI * arguments[0]/180;
+	direction(Math.cos(a), Math.sin(a));
+}
+
 var amt;
+var tile = new Array(2);
 
 function jit_gl_texture(inname){
 
 	fdbkTex.jit_gl_texture(inname);
-	
-	amt = _blur_amount; 
 
-	for(var i = 0; i < 5; i++){
+	amt = _blur_amount;
+	
+	for(var i = 0; i < 10; i++){
 
 		tile[0] = 128 * (i % 8);
 		tile[1] = 128 * Math.floor(i / 8);
-		slab_ver.param("tile", tile);
-		slab_hor.param("tile", tile);
-		slab_ver.param("blur_amount", amt);
-		slab_hor.param("blur_amount", amt);
+		slab_rad.param("tile", tile);
+		slab_rad.param("blur_amount", amt);
 
-		slab_ver.jit_gl_texture(fdbkTex.name);
-		slab_ver.draw();
+		slab_rad.jit_gl_texture(fdbkTex.name);
+		slab_rad.draw();
 
-		slab_hor.jit_gl_texture(slab_ver.out_name);
-		slab_hor.draw();
-
-		fdbkTex.jit_gl_texture(slab_hor.out_name);	
-		amt *= 1.3333333333;	
+		fdbkTex.jit_gl_texture(slab_rad.out_name);	
+		amt *= 1.3333333333333333;	
 	}
 
 	outlet(0, "jit_gl_texture", fdbkTex.name);

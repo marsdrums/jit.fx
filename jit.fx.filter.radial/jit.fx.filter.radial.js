@@ -84,7 +84,9 @@ destroyFindCTX.local = 1;
 
 function notifydeleted() {
     destroyFindCTX();
-    slab.freepeer();
+    slab_rad.freepeer();
+    //slab_hor.freepeer();
+    fdbkTex.freepeer();
 }
 /*
 // ___ GRAB JIT.WORLD BANG____________________________________________
@@ -106,22 +108,58 @@ var swapCallback = function(event) {
 }
 */
 
-var _sharpness = 0;
 
-var slab = new JitterObject("jit.gl.slab", drawto);
-slab.file = "jit.fx.sharpen.jxs";
-slab.inputs = 1;
+var slab_rad = new JitterObject("jit.gl.slab", drawto);
+slab_rad.file = "jit.fx.filter.radial.jxs";
+slab_rad.inputs = 1;
 
+var fdbkTex = new JitterObject("jit_gl_texture", drawto);
+fdbkTex.adapt = 1;
 
-function sharpness(){
-	_sharpness = arguments[0];
-	slab.param("sharpness", _sharpness);
+var _blur_amount = 0;
+slab_rad.param("blur_amount", _blur_amount);
+
+var _center = [0, 0];
+slab_rad.param("center", _center);
+
+var _mode = 0;
+
+function blur_amount(){ 
+	_blur_amount = arguments[0];
 }
+
+function center(){ 
+	_center = [ arguments[0], arguments[1] ];
+	slab_rad.param("center", _center);
+}
+
+function mode(){
+	_mode = arguments[0];
+	slab_rad.param("mode", _mode);
+}
+
+var amt;
+var tile = new Array(2);
 
 function jit_gl_texture(inname){
 
-	slab.jit_gl_texture(inname);
-	slab.draw();
+	fdbkTex.jit_gl_texture(inname);
 
-	outlet(0, "jit_gl_texture", slab.out_name);
+	amt = _blur_amount;
+	
+	for(var i = 0; i < 10; i++){
+
+		tile[0] = 128 * (i % 8);
+		tile[1] = 128 * Math.floor(i / 8);
+		slab_rad.param("tile", tile);
+		slab_rad.param("blur_amount", amt);
+
+		slab_rad.jit_gl_texture(fdbkTex.name);
+		slab_rad.draw();
+
+		fdbkTex.jit_gl_texture(slab_rad.out_name);	
+		amt *= 1.3333333333333333;	
+	}
+
+	outlet(0, "jit_gl_texture", fdbkTex.name);
 }

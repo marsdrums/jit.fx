@@ -1,0 +1,59 @@
+<jittershader name="default">
+	<description>Default Slab </description>
+	<param name="tex0" type="int" default="0" />
+	<param name="uv" type="vec2" state="TEXCOORD" />
+	<param name="texMat" type="mat4" state="TEXTURE0_MATRIX" />
+	<param name="ascale" type="float" default="0.0" />
+	<param name="rscale" type="float" default="0.299" />
+	<param name="gscale" type="float" default="0.587" />
+	<param name="bscale" type="float" default="0.114" />
+	<language name="glsl" version="1.5">
+		<bind param="tex0" program="fp" />
+		<bind param="uv" program="vp" />
+		<bind param="texMat" program="vp" />
+		<bind param="ascale" program="fp" />
+		<bind param="rscale" program="fp" />
+		<bind param="gscale" program="fp" />
+		<bind param="bscale" program="fp" />
+		<program name="vp" type="vertex"  >
+<![CDATA[
+#version 330 core
+
+in vec2 uv;
+uniform mat4 texMat;
+
+out jit_PerVertex {
+	vec2 uv;
+} jit_out;
+
+void main(void) {
+	gl_Position = vec4(uv*2 - 1, 0, 1);
+	jit_out.uv = (texMat * vec4(uv,0,1)).xy;
+}
+]]>
+</program>
+
+<program name="fp" type="fragment"  >
+<![CDATA[
+#version 330 core
+
+
+layout (location = 0) out vec4 outColor;
+
+uniform samplerJit0 tex0;
+uniform float ascale, rscale, gscale, bscale;
+
+in jit_PerVertex {
+	vec2 uv;
+} jit_in;
+
+void main(void) {
+
+	float luma = dot(texelFetch(tex0, ivec2(jit_in.uv)), vec4(rscale, gscale, bscale, ascale));
+	outColor = vec4(luma, luma, luma, 1.0);
+
+}
+]]>
+</program>
+</language>
+</jittershader>

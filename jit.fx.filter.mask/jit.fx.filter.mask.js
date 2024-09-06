@@ -111,11 +111,11 @@ var swapCallback = function(event) {
 
 
 var slab_ver = new JitterObject("jit.gl.slab", drawto);
-slab_ver.file = "jit.fx.blur.mask_vertical.jxs";
+slab_ver.file = "jit.fx.filter.mask_vertical.jxs";
 slab_ver.inputs = 1;
 
 var slab_hor = new JitterObject("jit.gl.slab", drawto);
-slab_hor.file = "jit.fx.blur.mask_horizontal.jxs";
+slab_hor.file = "jit.fx.filter.mask_horizontal.jxs";
 slab_hor.inputs = 1;
 
 var fdbkTex = new JitterObject("jit_gl_texture", drawto);
