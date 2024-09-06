@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 329.0, 100.0, 886.0, 881.0 ],
+		"rect" : [ 750.0, 189.0, 886.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,6 +40,18 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 89.0, 160.0, 73.0, 22.0 ],
+					"text" : "loadmess 5."
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"format" : 6,
 					"id" : "obj-3",
 					"maxclass" : "flonum",
@@ -47,7 +59,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 263.0, 229.0, 50.0, 22.0 ]
+					"patching_rect" : [ 89.0, 199.0, 50.0, 22.0 ]
 				}
 
 			}
@@ -58,23 +70,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 261.0, 284.0, 123.0, 22.0 ],
+					"patching_rect" : [ 89.0, 229.0, 123.0, 22.0 ],
 					"text" : "prepend blur_amount"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"fontface" : 0,
-					"fontname" : "Arial",
-					"fontsize" : 12.0,
-					"id" : "obj-86",
-					"maxclass" : "jit.fpsgui",
-					"mode" : 3,
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 170.0, 394.0, 80.0, 35.0 ]
 				}
 
 			}
@@ -85,27 +82,27 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 128.0, 451.0, 383.0, 261.0 ],
+					"patching_rect" : [ 29.0, 376.0, 584.0, 403.0 ],
 					"sync" : 1
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"filename" : "jit.fx.blur.js",
+					"filename" : "jit.fx.blur.gaussian.js",
 					"id" : "obj-72",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 128.0, 336.0, 81.0, 22.0 ],
+					"patching_rect" : [ 29.0, 285.0, 132.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "v8 jit.fx.blur.js",
+					"text" : "v8 jit.fx.blur.gaussian.js",
 					"textfile" : 					{
-						"filename" : "jit.fx.blur.js",
+						"filename" : "jit.fx.blur.gaussian.js",
 						"flags" : 0,
 						"embed" : 0,
 						"autowatch" : 1
@@ -121,7 +118,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 128.0, 70.0, 58.0, 22.0 ],
+					"patching_rect" : [ 29.0, 19.0, 58.0, 22.0 ],
 					"text" : "loadbang"
 				}
 
@@ -133,7 +130,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 128.0, 114.0, 183.0, 22.0 ],
+					"patching_rect" : [ 29.0, 63.0, 183.0, 22.0 ],
 					"text" : "output_texture 1, loop 1, vol 0., 1"
 				}
 
@@ -165,7 +162,7 @@
 					"outlettype" : [ "jit_gl_texture", "", "dictionary" ],
 					"output_texture" : 1,
 					"parameter_enable" : 0,
-					"patching_rect" : [ 128.0, 159.0, 150.0, 30.0 ],
+					"patching_rect" : [ 29.0, 108.0, 150.0, 30.0 ],
 					"saved_attribute_attributes" : 					{
 						"candicane2" : 						{
 							"expression" : ""
@@ -207,7 +204,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "jit_matrix", "bang", "" ],
-					"patching_rect" : [ 128.0, 32.0, 111.0, 22.0 ],
+					"patching_rect" : [ 59.0, 328.0, 111.0, 22.0 ],
 					"text" : "jit.world @enable 1"
 				}
 
@@ -229,6 +226,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-3", 0 ],
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-1", 0 ],
 					"source" : [ "obj-3", 0 ]
 				}
@@ -243,16 +247,16 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-73", 0 ],
-					"order" : 1,
+					"destination" : [ "obj-5", 0 ],
+					"order" : 0,
 					"source" : [ "obj-72", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-86", 0 ],
-					"order" : 0,
+					"destination" : [ "obj-73", 0 ],
+					"order" : 1,
 					"source" : [ "obj-72", 0 ]
 				}
 
@@ -265,7 +269,7 @@
 
 			}
  ],
-		"originid" : "pat-249",
+		"originid" : "pat-255",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
@@ -273,7 +277,7 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.fx.blur.js",
+				"name" : "jit.fx.blur.gaussian.js",
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.blur",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
