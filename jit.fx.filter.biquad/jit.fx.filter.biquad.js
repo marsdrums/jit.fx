@@ -122,31 +122,23 @@ slab.outputs = 4;
 
 var a0, a1, a2, b1, b2;
 
-var _cutoff = 2;
-var _q = 0.5;
+var _cutoff = 2.0;
+var _q = 0.2;
 var _filtertype = 0;
-var samplerate = 60;
+var samplerate = 30;
+lowpass();
+
+function coefficients(){
+
+	slab.param("a0", arguments[0]);
+	slab.param("a1", arguments[1]);
+	slab.param("a2", arguments[2]);
+	slab.param("b1", arguments[3]);
+	slab.param("b2", arguments[4]);
+}
 
 
 function lowpass(){
-/*
-    var ita =1.0/ Math.tan(Math.PI * _cutoff / samplerate);
-    var q=Math.sqrt(2.0);
-    a0 = 1.0 / (1.0 + q*ita + ita*ita);
-    a1 = 2*a0;
-    a2 = a0;
-    b1 = 2.0 * (ita*ita - 1.0) * a0;
-    b2 = -(1.0 - q*ita + ita*ita) * a0;
-*/
-/*
-	var lambda = 1.0 / (Math.tan(Math.PI * _cutoff / samplerate));
-	var lambda2 = lambda*lambda;
-    a0 = 1.0 / (1.0 + (2.0 * lambda) + lambda2);
-    a1 = 2.0 * a0;
-    a2 = a0;
-    b1 = 2.0 * a0 * (1.0 - lambda2);
-    b2 = a0 * (1.0 - (2.0 * lambda) + lambda2);
-*/
 
 	var omega = _cutoff * Math.PI*2 / samplerate;
 	var sn = Math.sin(omega);
@@ -168,10 +160,6 @@ function lowpass(){
 	slab.param("b1", b1);
 	slab.param("b2", b2);
 
-	texIn1.clear();
-	texIn2.clear();
-	texIn3.clear();
-	texIn4.clear();
 }
 
 function hipass(){
@@ -193,19 +181,68 @@ function hipass(){
 	slab.param("a2", a2);
 	slab.param("b1", b1);
 	slab.param("b2", b2);
+
 }
+
+function bandpass(){
+
+	var omega = _cutoff * Math.PI*2 / samplerate;
+	var sn = Math.sin(omega);
+	var cs = Math.cos(omega);
+	var alpha = sn * 0.5/_q;
+
+	b0 = 1./(1. + alpha);
+	a0 = alpha * b0;
+	a1 = 0.;
+	a2 = -alpha * b0;
+	b1 = -2. * cs * b0;
+	b2 = (1. - alpha) * b0;
+
+	slab.param("a0", a0);
+	slab.param("a1", a1);
+	slab.param("a2", a2);
+	slab.param("b1", b1);
+	slab.param("b2", b2);
+}
+
+function bandstop(){
+
+	var omega = _cutoff * Math.PI*2 / samplerate;
+	var sn = Math.sin(omega);
+	var cs = Math.cos(omega);
+	var alpha = sn * 0.5/_q;
+
+	b0 = 1./(1. + alpha);			
+	b1 = (-2. * cs) * b0;
+	a1 = b1;
+	b2 = (1. - alpha) * b0;
+	a0 = b0;
+	a2 = b0;
+
+	slab.param("a0", a0);
+	slab.param("a1", a1);
+	slab.param("a2", a2);
+	slab.param("b1", b1);
+	slab.param("b2", b2);
+}
+
 
 function cutoff(){
 	_cutoff = arguments[0];
+	update_coefficients();
 }
 
 function q(){
-	_q = arguments[0];
+	_q = Math.max(0.02, arguments[0]);
+	update_coefficients();
 }
 
 function filtertype(){
 	_filtertype = arguments[0];
+	update_coefficients();
+}
 
+function update_coefficients(){
 	switch(_filtertype) {
 	  case 0:
 	    lowpass();
@@ -213,6 +250,12 @@ function filtertype(){
 	  case 1:
 	    hipass();
 	    break;
+	  case 2:
+	  	bandpass();
+	  	break;
+	  case 3:
+	  	bandstop();
+	  	break;
 	  default:
 	    return;
 	}
