@@ -45,8 +45,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 100.0, 135.0, 83.0, 22.0 ],
-					"text" : "loadmess 197"
+					"patching_rect" : [ 100.0, 135.0, 73.0, 22.0 ],
+					"text" : "loadmess 0."
 				}
 
 			}
@@ -70,8 +70,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 100.0, 194.0, 76.0, 22.0 ],
-					"text" : "prepend hue"
+					"patching_rect" : [ 100.0, 194.0, 105.0, 22.0 ],
+					"text" : "prepend threshold"
 				}
 
 			}
@@ -82,27 +82,28 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 54.0, 343.0, 469.0, 345.0 ],
+					"patching_rect" : [ 54.0, 343.0, 486.0, 333.0 ],
 					"sync" : 1
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"filename" : "jit.fx.hue.js",
+					"filename" : "jit.fx.sobel.js",
 					"id" : "obj-72",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 54.0, 252.0, 81.0, 22.0 ],
+					"patching_rect" : [ 54.0, 252.0, 90.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "v8 jit.fx.hue.js",
+					"text" : "v8 jit.fx.sobel.js",
 					"textfile" : 					{
-						"filename" : "jit.fx.hue.js",
+						"text" : "autowhatch = 1; inlets = 1; outlets = 1;\n\n\n//______ GRAB CONTEXT ______________________________________________________________________\n\nvar drawto = \"\";\ndeclareattribute(\"drawto\", null, \"dosetdrawto\", 0);\n\nvar implicitdrawto = \"\";\nvar swaplisten = null; // The listener for the jit.world\nvar explicitdrawto = false;\nvar proxy = null;\nvar swapListener = null;\n\nif(max.version >= 820) {\n    proxy = new JitterObject(\"jit.proxy\");\n}\n\nvar implicit_tracker = new JitterObject(\"jit_gl_implicit\"); // dummy oggetto gl\nvar implicit_lstnr = new JitterListener(implicit_tracker.name, implicit_callback);\n\nfunction implicit_callback(event) { \n\t// se non stai mettendo ctx a mano e se implicitdrawto != dal nome di implicit\n\tif(!explicitdrawto && implicitdrawto != implicit_tracker.drawto[0]) {\n\t\t// important! drawto is an array so get first element\n\t\timplicitdrawto = implicit_tracker.drawto[0];\n        //FF_Utils.Print(\"IMPLICIT CLL\", implicitdrawto);\n\t\tdosetdrawto(implicitdrawto);\n\t}\n}\nimplicit_callback.local = 1;\n\nfunction setDrawto(val) {\n\texplicitdrawto = true;\n\tdosetdrawto(val);\n};\n\nfunction dosetdrawto(newdrawto) {\n\tif(newdrawto == drawto || !newdrawto) {\n\t\t// bounce\n        //FF_Utils.Print(\"bouncer\");\n\t\treturn;\n\t}\n\tif(proxy !== undefined) {\n\t\tproxy.name = newdrawto;\n        // viene chiamato quando abbiamo classe\n        if(proxy.class !== undefined && proxy.class != \"\") {\n\t\t\t// drawto may be root render or sub-node\n\t\t\t// if root the class will return jit_gl_context_view\n\t\t\tif(proxy.class != \"jit_gl_context_view\") { // jit_gl_context_view = node dentro world\n\t\t\t\t// class is a sub-node, get the drawto on that\n\t\t\t\tproxydrawto = proxy.send(\"getdrawto\"); // prendi drawto di world che sarebbe nome del node\n\t\t\t\t// recurse until we get root\n\t\t\t\t// important! drawto is an array so get first element\n                //FF_Utils.Print(\"proxy class\", proxy.class);\n                //FF_Utils.Print(\"DIVERSo da contxt_view\", implicitdrawto);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);\n\t\t\t}\n\t\t}\n\t\telse {\n            // viene chiamato se non abbiamo classe\n\t\t\tproxydrawto = proxy.send(\"getdrawto\");\n\t\t\tif(proxydrawto !== null && proxydrawto !== undefined) {\n                //FF_Utils.Print(\"SE E NODE??\", proxydrawto[0]);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);  // name of the internal node\n\t\t\t}\n\t\t}\n\t}\n    //FF_Utils.Print(\"ASSEGNA drawto\", newdrawto);\n    drawto = newdrawto;\n    // chiama cose che vanno inizializzate quando c'è il drawto\n    // assegna listener per ctx\n    swapListener = new JitterListener(drawto, swapCallback);\n}\ndosetdrawto.local = 1;\n\nfunction destroyFindCTX() {\n\timplicit_lstnr.subjectname = \"\"\n\timplicit_tracker.freepeer();\n}\ndestroyFindCTX.local = 1;\n\nfunction notifydeleted() {\n    destroyFindCTX();\n    slab.freepeer();\n}\n/*\n// ___ GRAB JIT.WORLD BANG____________________________________________\nvar swapCallback = function(event) {\n    switch (event.eventname) {\n        case (\"swap\" || \"draw\"):\n        \t//bang();\n            // FF_Utils.Print(\"BANG\")\n            break;\n        //case \"mouse\": case \"mouseidle\": \n        //    FF_Utils.Print(\"MOUSE\", event.args)\n        //    break;\n        case \"willfree\":\n            //FF_Utils.Print(\"DESTROY\")\n            break;\n        default: \n            break;\n    }\n}\n*/\n\nvar slab = new JitterObject(\"jit.gl.slab\", drawto);\nslab.file = \"jit.fx.sobel.jxs\";\nslab.inputs = 1;\n\n\nfunction threshold() {\n\tslab.param(\"threshold\", arguments[0]);\n}\n\nfunction jit_gl_texture(inname){\n\n\tslab.jit_gl_texture(inname);\n\tslab.draw();\n\n\toutlet(0, \"jit_gl_texture\", slab.out_name);\n}",
+						"filename" : "jit.fx.sobel.js",
 						"flags" : 0,
 						"embed" : 0,
 						"autowatch" : 1
@@ -204,7 +205,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "jit_matrix", "bang", "" ],
-					"patching_rect" : [ 112.0, 297.0, 111.0, 22.0 ],
+					"patching_rect" : [ 90.0, 296.0, 111.0, 22.0 ],
 					"text" : "jit.world @enable 1"
 				}
 
@@ -269,7 +270,7 @@
 
 			}
  ],
-		"originid" : "pat-610",
+		"originid" : "pat-487",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
@@ -277,8 +278,8 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.fx.hue.js",
-				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.hue",
+				"name" : "jit.fx.sobel.js",
+				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.sobel",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1
