@@ -1,0 +1,115 @@
+<jittershader name="default">
+	<description>Default Slab </description>
+	<param name="tex0" type="int" default="0" />
+	<param name="fdbkTex" type="int" default="1" />
+	<param name="uv" type="vec2" state="TEXCOORD" />
+	<param name="texMat" type="mat4" state="TEXTURE0_MATRIX" />
+	<param name="theta" type="float" default="0.0" />
+	<param name="anchor_x" type="float" default="0.0" />
+	<param name="anchor_y" type="float" default="0.0" />
+	<param name="offset_x" type="float" default="0.0" />
+	<param name="offset_y" type="float" default="0.0" />
+	<param name="zoom_x" type="float" default="1.0" />
+	<param name="zoom_y" type="float" default="1.0" />
+	<param name="boundmode" type="int" default="0" />
+	<param name="texDim" type="vec2" state="TEXDIM0" />
+	<language name="glsl" version="1.5">
+		<bind param="tex0" program="fp" />
+		<bind param="fdbkTex" program="fp" />
+		<bind param="uv" program="vp" />
+		<bind param="texMat" program="vp" />
+		<bind param="theta" program="vp" />
+		<bind param="anchor_x" program="fp" />
+		<bind param="anchor_y" program="fp" />
+		<bind param="offset_x" program="fp" />
+		<bind param="offset_y" program="fp" />
+		<bind param="zoom_x" program="fp" />
+		<bind param="zoom_y" program="fp" />
+		<bind param="boundmode" program="fp" />
+		<bind param="texDim" program="fp" />
+		<program name="vp" type="vertex"  >
+<![CDATA[
+#version 330 core
+
+in vec2 uv;
+uniform mat4 texMat;
+uniform float theta;
+
+out jit_PerVertex {
+	vec2 uv;
+	flat float costheta;
+	flat float sintheta;
+} jit_out;
+
+void main(void) {
+	gl_Position = vec4(uv*2 - 1, 0, 1);
+	jit_out.uv = (texMat * vec4(uv,0,1)).xy;
+	jit_out.costheta = cos(theta);
+	jit_out.sintheta = sin(theta);
+}
+]]>
+</program>
+
+<program name="fp" type="fragment"  >
+<![CDATA[
+#version 330 core
+
+
+layout (location = 0) out vec4 outColor;
+
+uniform samplerJit0 tex0, fdbkTex;
+uniform float anchor_x, anchor_y, offset_x, offset_y, zoom_x, zoom_y;
+uniform int boundmode;
+uniform vec2 texDim;
+
+in jit_PerVertex {
+	vec2 uv;
+	flat float costheta;
+	flat float sintheta;
+} jit_in;
+
+vec2 mirror_repeat(vec2 uv){
+	uv = mod(uv, texDim*2);
+	uv.x = uv.x > texDim.x ? 2 * texDim.x - uv.x - 1 : uv.x;
+	uv.y = uv.y > texDim.y ? 2 * texDim.y - uv.y - 1 : uv.y;
+	return uv;
+}
+
+
+void main(void) {
+
+	vec2 rotUV;
+	rotUV.x = ((jit_in.costheta/zoom_x)*(jit_in.uv.x-(offset_x+anchor_x)) - (jit_in.sintheta/zoom_x)*(jit_in.uv.y-(offset_y+anchor_y))) + anchor_x;
+	rotUV.y = ((jit_in.sintheta/zoom_x)*(jit_in.uv.x-(offset_x+anchor_x)) + (jit_in.costheta/zoom_y)*(jit_in.uv.y-(offset_y+anchor_y))) + anchor_y;
+
+	if(rotUV.x < 0 || rotUV.y < 0 || rotUV.x >= texDim.x || rotUV.y >= texDim.y){
+
+		switch (boundmode) {
+		case 0:
+			outColor = texture(fdbkTex, jit_in.uv); //
+		    break;
+		case 1:
+		    outColor = vec4(0.0);
+		    break;
+		case 2:
+		    outColor = texture(tex0, mod(rotUV, texDim));
+		    break;
+		case 3:
+		    outColor = texture(tex0, rotUV);
+		    break;
+		case 4:
+		    outColor = texture(tex0, mirror_repeat(rotUV));
+		    break;
+		}		
+
+	} else {
+
+	outColor = texture(tex0, rotUV);
+
+	}
+
+}
+]]>
+</program>
+</language>
+</jittershader>

@@ -136,7 +136,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 199.0, 462.0, 342.0, 262.0 ],
+					"patching_rect" : [ 192.0, 439.0, 342.0, 262.0 ],
 					"sync" : 1
 				}
 
@@ -148,7 +148,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 128.0, 462.0, 52.0, 262.0 ],
+					"patching_rect" : [ 128.0, 439.0, 49.0, 262.0 ],
 					"sync" : 1
 				}
 
@@ -168,6 +168,7 @@
 ,
 					"text" : "v8 jit.fx.split.js",
 					"textfile" : 					{
+						"text" : "autowhatch = 1; inlets = 1; outlets = 2;\n\n\n//______ GRAB CONTEXT ______________________________________________________________________\n\nvar drawto = \"\";\ndeclareattribute(\"drawto\", null, \"dosetdrawto\", 0);\n\nvar implicitdrawto = \"\";\nvar swaplisten = null; // The listener for the jit.world\nvar explicitdrawto = false;\nvar proxy = null;\nvar swapListener = null;\n\nif(max.version >= 820) {\n    proxy = new JitterObject(\"jit.proxy\");\n}\n\nvar implicit_tracker = new JitterObject(\"jit_gl_implicit\"); // dummy oggetto gl\nvar implicit_lstnr = new JitterListener(implicit_tracker.name, implicit_callback);\n\nfunction implicit_callback(event) { \n\t// se non stai mettendo ctx a mano e se implicitdrawto != dal nome di implicit\n\tif(!explicitdrawto && implicitdrawto != implicit_tracker.drawto[0]) {\n\t\t// important! drawto is an array so get first element\n\t\timplicitdrawto = implicit_tracker.drawto[0];\n        //FF_Utils.Print(\"IMPLICIT CLL\", implicitdrawto);\n\t\tdosetdrawto(implicitdrawto);\n\t}\n}\nimplicit_callback.local = 1;\n\nfunction setDrawto(val) {\n\texplicitdrawto = true;\n\tdosetdrawto(val);\n};\n\nfunction dosetdrawto(newdrawto) {\n\tif(newdrawto == drawto || !newdrawto) {\n\t\t// bounce\n        //FF_Utils.Print(\"bouncer\");\n\t\treturn;\n\t}\n\tif(proxy !== undefined) {\n\t\tproxy.name = newdrawto;\n        // viene chiamato quando abbiamo classe\n        if(proxy.class !== undefined && proxy.class != \"\") {\n\t\t\t// drawto may be root render or sub-node\n\t\t\t// if root the class will return jit_gl_context_view\n\t\t\tif(proxy.class != \"jit_gl_context_view\") { // jit_gl_context_view = node dentro world\n\t\t\t\t// class is a sub-node, get the drawto on that\n\t\t\t\tproxydrawto = proxy.send(\"getdrawto\"); // prendi drawto di world che sarebbe nome del node\n\t\t\t\t// recurse until we get root\n\t\t\t\t// important! drawto is an array so get first element\n                //FF_Utils.Print(\"proxy class\", proxy.class);\n                //FF_Utils.Print(\"DIVERSo da contxt_view\", implicitdrawto);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);\n\t\t\t}\n\t\t}\n\t\telse {\n            // viene chiamato se non abbiamo classe\n\t\t\tproxydrawto = proxy.send(\"getdrawto\");\n\t\t\tif(proxydrawto !== null && proxydrawto !== undefined) {\n                //FF_Utils.Print(\"SE E NODE??\", proxydrawto[0]);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);  // name of the internal node\n\t\t\t}\n\t\t}\n\t}\n    //FF_Utils.Print(\"ASSEGNA drawto\", newdrawto);\n    drawto = newdrawto;\n    // chiama cose che vanno inizializzate quando c'è il drawto\n    // assegna listener per ctx\n    swapListener = new JitterListener(drawto, swapCallback);\n}\ndosetdrawto.local = 1;\n\nfunction destroyFindCTX() {\n\timplicit_lstnr.subjectname = \"\"\n\timplicit_tracker.freepeer();\n}\ndestroyFindCTX.local = 1;\n\nfunction notifydeleted() {\n    destroyFindCTX();\n    inTex.freepeer();\n    slabLeft.freepeer();\n    slabRight.freepeer();\n\n}\n/*\n// ___ GRAB JIT.WORLD BANG____________________________________________\nvar swapCallback = function(event) {\n    switch (event.eventname) {\n        case (\"swap\" || \"draw\"):\n        \t//bang();\n            // FF_Utils.Print(\"BANG\")\n            break;\n        //case \"mouse\": case \"mouseidle\": \n        //    FF_Utils.Print(\"MOUSE\", event.args)\n        //    break;\n        case \"willfree\":\n            //FF_Utils.Print(\"DESTROY\")\n            break;\n        default: \n            break;\n    }\n}\n*/\n\nvar _splitpoiint = 1;\nvar _splitdim = 0;\nvar ratio;\nvar dimscale;\n\nvar inTex = new JitterObject(\"jit.gl.texture\", drawto);\n\nvar slabLeft = new JitterObject(\"jit.gl.slab\", drawto);\nslabLeft.file = \"jit.fx.split_left.jxs\";\n\nvar slabRight = new JitterObject(\"jit.gl.slab\", drawto);\nslabRight.file = \"jit.fx.split_right.jxs\";\n\n\nfunction splitpoint(){\n\t_splitpoint = arguments[0];\n}\n\nfunction splitdim(){\n\tif(arguments[0] != 0 && arguments[0] != 1) return;\n\t_splitdim = arguments[0];\n}\n\n\nfunction jit_gl_texture(inname){\n\n\tinTex.jit_gl_texture(inname);\n\n\t_splitpoint = Math.max(_splitpoint, 0);\n\t_splitpoint = Math.min(_splitpoint, inTex.dim[_splitdim] - 1);\n\n\tratio = _splitpoint / inTex.dim[_splitdim];\n\tdimscale = _splitdim == 0 ? [ratio, 1] : [1, ratio];\n\n\tslabLeft.param(\"ratio\", ratio);\n\tslabLeft.param(\"splitdim\", _splitdim);\n\tslabLeft.dimscale = dimscale; \n\tslabLeft.jit_gl_texture(inname);\n\tslabLeft.draw();\n\n\tratio = 1 - ratio;\n\tslabRight.param(\"ratio\", ratio);\n\tslabRight.param(\"splitdim\", _splitdim);\n\tdimscale = _splitdim == 0 ? [ratio, 1] : [1, ratio];\n\tslabRight.dimscale = dimscale; \n\tslabRight.jit_gl_texture(inname);\n\tslabRight.draw();\n\n\toutlet(1 - _splitdim, \"jit_gl_texture\", slabRight.out_name);\n\toutlet(_splitdim, \"jit_gl_texture\", slabLeft.out_name);\n\n\n}\n",
 						"filename" : "jit.fx.split.js",
 						"flags" : 0,
 						"embed" : 0,
@@ -184,7 +185,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 128.0, 70.0, 58.0, 22.0 ],
+					"patching_rect" : [ 128.0, 106.0, 58.0, 22.0 ],
 					"text" : "loadbang"
 				}
 
@@ -196,7 +197,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 128.0, 114.0, 183.0, 22.0 ],
+					"patching_rect" : [ 128.0, 136.0, 183.0, 22.0 ],
 					"text" : "output_texture 1, loop 1, vol 0., 1"
 				}
 
@@ -228,7 +229,38 @@
 					"outlettype" : [ "jit_gl_texture", "", "dictionary" ],
 					"output_texture" : 1,
 					"parameter_enable" : 0,
-					"patching_rect" : [ 128.0, 170.0, 150.0, 30.0 ]
+					"patching_rect" : [ 128.0, 170.0, 150.0, 30.0 ],
+					"saved_attribute_attributes" : 					{
+						"candicane2" : 						{
+							"expression" : ""
+						}
+,
+						"candicane3" : 						{
+							"expression" : ""
+						}
+,
+						"candicane4" : 						{
+							"expression" : ""
+						}
+,
+						"candicane5" : 						{
+							"expression" : ""
+						}
+,
+						"candicane6" : 						{
+							"expression" : ""
+						}
+,
+						"candicane7" : 						{
+							"expression" : ""
+						}
+,
+						"candicane8" : 						{
+							"expression" : ""
+						}
+
+					}
+
 				}
 
 			}
@@ -334,7 +366,7 @@
 
 			}
  ],
-		"originid" : "pat-12",
+		"originid" : "pat-127",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
@@ -343,7 +375,7 @@
 			}
 , 			{
 				"name" : "jit.fx.split.js",
-				"bootpath" : "~/Documents/GitHub/jit.fx",
+				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.split",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
 				"implicit" : 1
