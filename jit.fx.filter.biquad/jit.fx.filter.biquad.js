@@ -85,7 +85,6 @@ destroyFindCTX.local = 1;
 function notifydeleted() {
     destroyFindCTX();
     slab.freepeer();
-    texIn0.freepeer();
     texIn1.freepeer();
     texIn2.freepeer();
     texIn3.freepeer();
@@ -111,60 +110,129 @@ var swapCallback = function(event) {
 }
 */
 
-var texIn0 = new JitterObject("jit.gl.texture", drawto);
-var texIn1 = new JitterObject("jit.gl.texture", drawto);
-var texIn2 = new JitterObject("jit.gl.texture", drawto);
-var texIn3 = new JitterObject("jit.gl.texture", drawto);
-var texIn4 = new JitterObject("jit.gl.texture", drawto);
+var texIn1 = new JitterObject("jit.gl.texture", drawto); texIn1.defaultimage = "black";
+var texIn2 = new JitterObject("jit.gl.texture", drawto); texIn2.defaultimage = "black";
+var texIn3 = new JitterObject("jit.gl.texture", drawto); texIn3.defaultimage = "black";
+var texIn4 = new JitterObject("jit.gl.texture", drawto); texIn4.defaultimage = "black";
 
 var slab = new JitterObject("jit.gl.slab", drawto);
 slab.file = "jit.fx.filter.biquad.jxs";
 slab.inputs = 5;
 slab.outputs = 4;
 
-var _theta = 0;
-var _anchor_x = 0;
-var _anchor_y = 0;
-var _offset_x = 0;
-var _offset_y = 0;
-var _zoom_x = 1;
-var _zoom_y = 1;
-var _boundmode = 0;
+var a0, a1, a2, b1, b2;
 
-slab.param("theta", _theta);
-slab.param("anchor_x", _anchor_x);
-slab.param("anchor_y", _anchor_y);
-slab.param("offset_x", _offset_x);
-slab.param("offset_y", _offset_y);
-slab.param("zoom_x", _zoom_x);
-slab.param("zoom_y", _zoom_y);
-slab.param("boundmode", _boundmode);
+var _cutoff = 2;
+var _q = 0.5;
+var _filtertype = 0;
+var samplerate = 60;
 
-function theta(){ _theta = arguments[0]; slab.param("theta", _theta); }
-function anchor_x(){ _anchor_x = arguments[0]; slab.param("anchor_x", _anchor_x); }
-function anchor_y(){ _anchor_y = arguments[0]; slab.param("anchor_y", _anchor_y); }
-function offset_x(){ _offset_x = arguments[0]; slab.param("offset_x", _offset_x); }
-function offset_y(){ _offset_y = arguments[0]; slab.param("offset_y", _offset_y); }
-function zoom_x(){ _zoom_x = arguments[0]; slab.param("zoom_x", _zoom_x); }
-function zoom_y(){ _zoom_y = arguments[0]; slab.param("zoom_y", _zoom_y); }
-function boundmode(){ _boundmode = arguments[0]; slab.param("boundmode", _boundmode); }
+
+function lowpass(){
+/*
+    var ita =1.0/ Math.tan(Math.PI * _cutoff / samplerate);
+    var q=Math.sqrt(2.0);
+    a0 = 1.0 / (1.0 + q*ita + ita*ita);
+    a1 = 2*a0;
+    a2 = a0;
+    b1 = 2.0 * (ita*ita - 1.0) * a0;
+    b2 = -(1.0 - q*ita + ita*ita) * a0;
+*/
+/*
+	var lambda = 1.0 / (Math.tan(Math.PI * _cutoff / samplerate));
+	var lambda2 = lambda*lambda;
+    a0 = 1.0 / (1.0 + (2.0 * lambda) + lambda2);
+    a1 = 2.0 * a0;
+    a2 = a0;
+    b1 = 2.0 * a0 * (1.0 - lambda2);
+    b2 = a0 * (1.0 - (2.0 * lambda) + lambda2);
+*/
+
+	var omega = _cutoff * Math.PI*2 / samplerate;
+	var sn = Math.sin(omega);
+	var cs = Math.cos(omega);
+	var igain = 1.0;///gain; 
+	var one_over_Q = 1./_q;
+	var alpha = sn * 0.5 * one_over_Q;
+
+	b0 = 1./(1. + alpha);
+	a2 = ((1 - cs) * 0.5) * b0;
+	a0 = a2;
+	a1 = (1. - cs) * b0;
+	b1 = (-2. * cs) * b0;
+	b2 = (1. - alpha) * b0;
+
+	slab.param("a0", a0);
+	slab.param("a1", a1);
+	slab.param("a2", a2);
+	slab.param("b1", b1);
+	slab.param("b2", b2);
+
+	texIn1.clear();
+	texIn2.clear();
+	texIn3.clear();
+	texIn4.clear();
+}
+
+function hipass(){
+
+	var omega = _cutoff * Math.PI*2 / samplerate;
+	var sn = Math.sin(omega);
+	var cs = Math.cos(omega);
+	var alpha = sn * 0.5/_q;
+	
+	b0 = 1./(1. + alpha);
+	a2 = ((1. + cs) * 0.5) * b0;
+	a0 = a2;
+	a1 = -(1. + cs) * b0;
+	b1 = (-2. * cs) * b0;
+	b2 = (1. - alpha) * b0;
+
+	slab.param("a0", a0);
+	slab.param("a1", a1);
+	slab.param("a2", a2);
+	slab.param("b1", b1);
+	slab.param("b2", b2);
+}
+
+function cutoff(){
+	_cutoff = arguments[0];
+}
+
+function q(){
+	_q = arguments[0];
+}
+
+function filtertype(){
+	_filtertype = arguments[0];
+
+	switch(_filtertype) {
+	  case 0:
+	    lowpass();
+	    break;
+	  case 1:
+	    hipass();
+	    break;
+	  default:
+	    return;
+	}
+}
+
 
 function jit_gl_texture(inname){
 
-	if(_boundmode == 0){
-		slab.activeinput = 1;
-		slab.jit_gl_texture(fdbkTex.name);
-		slab.activeinput = 0;
-		slab.jit_gl_texture(inname);
-		slab.draw();
-		fdbkTex.jit_gl_texture(slab.out_name);
-	} else {
-		slab.activeinput = 0;
-		slab.jit_gl_texture(inname);	
-		slab.draw();	
-	}
+	slab.activeinput = 4;	slab.jit_gl_texture(texIn4.name);
+	slab.activeinput = 3;	slab.jit_gl_texture(texIn3.name);
+	slab.activeinput = 2;	slab.jit_gl_texture(texIn2.name);
+	slab.activeinput = 1;	slab.jit_gl_texture(texIn1.name);
+	slab.activeinput = 0;	slab.jit_gl_texture(inname);
 
-	
+	slab.draw();
 
-	outlet(0, "jit_gl_texture", slab.out_name);
+	texIn1.jit_gl_texture(slab.out_name[0]);
+	texIn2.jit_gl_texture(slab.out_name[1]);
+	texIn3.jit_gl_texture(slab.out_name[2]);
+	texIn4.jit_gl_texture(slab.out_name[3]);
+
+	outlet(0, "jit_gl_texture", slab.out_name[2]);
 }
