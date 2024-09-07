@@ -137,7 +137,6 @@ function coefficients(){
 	slab.param("b2", arguments[4]);
 }
 
-
 function lowpass(){
 
 	var omega = _cutoff * Math.PI*2 / samplerate;
@@ -159,7 +158,6 @@ function lowpass(){
 	slab.param("a2", a2);
 	slab.param("b1", b1);
 	slab.param("b2", b2);
-
 }
 
 function hipass(){
@@ -181,7 +179,6 @@ function hipass(){
 	slab.param("a2", a2);
 	slab.param("b1", b1);
 	slab.param("b2", b2);
-
 }
 
 function bandpass(){
@@ -226,7 +223,6 @@ function bandstop(){
 	slab.param("b2", b2);
 }
 
-
 function cutoff(){
 	_cutoff = arguments[0];
 	update_coefficients();
@@ -260,7 +256,6 @@ function update_coefficients(){
 	    return;
 	}
 }
-
 
 function jit_gl_texture(inname){
 
