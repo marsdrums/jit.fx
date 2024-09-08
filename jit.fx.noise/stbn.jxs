@@ -1,0 +1,42 @@
+<jittershader name="default">
+	<description>random noise 1D </description>
+	<param name="pos" type="vec3" state="POSITION" />
+	<param name="frame" type="int" default="0" />
+	<param name="stbnTex" type="int" default="0" />
+	<language name="glsl" version="1.5">
+		<bind param="pos" program="vp" />
+		<bind param="frame" program="fp" />
+		<bind param="stbnTex" program="fp" />
+		<program name="vp" type="vertex"  >
+
+<![CDATA[
+#version 330 core
+in vec3 pos;
+
+void main(void) {
+
+	gl_Position = vec4(pos, 1.);
+}
+]]>
+</program>
+		
+<program name="fp" type="fragment"  >
+<![CDATA[
+#version 330 core
+
+uniform int frame;
+uniform sampler2DRect stbnTex;
+
+layout (location = 0) out vec4 color;
+
+void main(void) {
+
+	float wrappedFrame = mod(float(frame), 64);
+	vec2 offset = 128 * vec2(mod(wrappedFrame, 8), floor(wrappedFrame/8));
+
+	color = texture(stbnTex, mod(gl_FragCoord.xy, vec2(128.0)) + offset);
+}
+]]>
+</program>
+</language>
+</jittershader>

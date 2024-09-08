@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 646.0, 100.0, 600.0, 881.0 ],
+		"rect" : [ 302.0, 100.0, 944.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -140,10 +140,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "chickens.mp4",
-								"filename" : "chickens.mp4",
+								"absolutepath" : "sunflower.mp4",
+								"filename" : "sunflower.mp4",
 								"filekind" : "moviefile",
-								"id" : "u196009576",
+								"id" : "u385011641",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -270,18 +270,18 @@
 
 			}
  ],
-		"originid" : "pat-487",
+		"originid" : "pat-601",
 		"dependency_cache" : [ 			{
-				"name" : "chickens.mp4",
-				"bootpath" : "C74:/media/jitter",
-				"type" : "mpg4",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "jit.fx.sobel.js",
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.sobel",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "sunflower.mp4",
+				"bootpath" : "C74:/media/jitter",
+				"type" : "mpg4",
 				"implicit" : 1
 			}
  ],

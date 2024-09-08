@@ -1,0 +1,42 @@
+<jittershader name="default">
+	<description>random noise 1D </description>
+	<param name="pos" type="vec3" state="POSITION" />
+	<param name="frame" type="int" default="0" />
+	<param name="bipolar" type="int" default="0" />
+	<language name="glsl" version="1.5">
+		<bind param="pos" program="vp" />
+		<bind param="frame" program="fp" />
+		<bind param="bipolar" program="fp" />
+        <include source="random_functions.glsl" program="fp" />	
+		<program name="vp" type="vertex"  >
+
+<![CDATA[
+#version 330 core
+
+in vec3 pos;
+
+void main(void) {
+
+	gl_Position = vec4(pos, 1.);
+}
+]]>
+</program>
+		
+<program name="fp" type="fragment"  >
+<![CDATA[
+#version 330 core
+
+uniform int frame, bipolar;
+
+layout (location = 0) out vec4 color;
+
+void main(void) {
+
+	uint seed = getRandSeed(gl_FragCoord.xy, frame);
+
+	color = bipolar == 0 ? vec4(vec3(RandomFloat01(seed)), 1) : vec4(vec3(RandomFloat01(seed)*2 - 1), 1);
+}
+]]>
+</program>
+</language>
+</jittershader>
