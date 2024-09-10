@@ -246,8 +246,8 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 370.0, 14.0, 85.0, 22.0 ],
-									"text" : "param choose"
+									"patching_rect" : [ 370.0, 14.0, 111.0, 22.0 ],
+									"text" : "param before_after"
 								}
 
 							}
@@ -383,7 +383,7 @@
 
 							}
  ],
-						"originid" : "pat-105"
+						"originid" : "pat-7"
 					}
 ,
 					"patching_rect" : [ 41.0, 411.0, 49.0, 22.0 ],
@@ -393,7 +393,7 @@
 			}
 , 			{
 				"box" : 				{
-					"attr" : "choose",
+					"attr" : "before_after",
 					"id" : "obj-8",
 					"maxclass" : "attrui",
 					"numinlets" : 1,
@@ -668,7 +668,7 @@
 
 			}
  ],
-		"originid" : "pat-103",
+		"originid" : "pat-5",
 		"dependency_cache" : [ 			{
 				"name" : "jit.fx.filter.sharpen.js",
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.filter.sharpen",

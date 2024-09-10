@@ -246,8 +246,8 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 370.0, 14.0, 85.0, 22.0 ],
-									"text" : "param choose"
+									"patching_rect" : [ 370.0, 14.0, 111.0, 22.0 ],
+									"text" : "param before_after"
 								}
 
 							}
@@ -383,7 +383,7 @@
 
 							}
  ],
-						"originid" : "pat-59"
+						"originid" : "pat-67"
 					}
 ,
 					"patching_rect" : [ 55.0, 286.0, 49.0, 22.0 ],
@@ -516,7 +516,7 @@
 			}
 , 			{
 				"box" : 				{
-					"attr" : "choose",
+					"attr" : "before_after",
 					"id" : "obj-8",
 					"maxclass" : "attrui",
 					"numinlets" : 1,
@@ -610,7 +610,7 @@
 
 			}
  ],
-		"originid" : "pat-57",
+		"originid" : "pat-65",
 		"dependency_cache" : [ 			{
 				"name" : "crashtest.mov",
 				"bootpath" : "C74:/media/jitter",
