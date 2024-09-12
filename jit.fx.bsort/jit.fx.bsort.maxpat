@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 240.0, 160.0, 1210.0, 795.0 ],
+		"rect" : [ 511.0, 182.0, 1210.0, 795.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -45,7 +45,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 527.0, 97.0, 70.0, 22.0 ],
+					"patching_rect" : [ 228.0, 108.0, 70.0, 22.0 ],
 					"text" : "loadmess 1"
 				}
 
@@ -58,7 +58,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 527.0, 135.0, 24.0, 24.0 ],
+					"patching_rect" : [ 228.0, 146.0, 24.0, 24.0 ],
 					"svg" : ""
 				}
 
@@ -70,7 +70,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 527.0, 174.0, 105.0, 22.0 ],
+					"patching_rect" : [ 228.0, 185.0, 105.0, 22.0 ],
 					"text" : "prepend dimmode"
 				}
 
@@ -82,7 +82,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 320.0, 13.0, 58.0, 22.0 ],
+					"patching_rect" : [ 40.0, 24.0, 58.0, 22.0 ],
 					"text" : "loadbang"
 				}
 
@@ -94,7 +94,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 320.0, 53.0, 183.0, 22.0 ],
+					"patching_rect" : [ 40.0, 64.0, 183.0, 22.0 ],
 					"text" : "output_texture 1, loop 1, vol 0., 1"
 				}
 
@@ -126,7 +126,7 @@
 					"outlettype" : [ "jit_gl_texture", "", "dictionary" ],
 					"output_texture" : 1,
 					"parameter_enable" : 0,
-					"patching_rect" : [ 320.0, 97.0, 150.0, 30.0 ],
+					"patching_rect" : [ 40.0, 108.0, 150.0, 30.0 ],
 					"saved_attribute_attributes" : 					{
 						"candicane2" : 						{
 							"expression" : ""
@@ -169,7 +169,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 320.0, 168.0, 88.0, 22.0 ],
+					"patching_rect" : [ 40.0, 212.0, 88.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
@@ -193,21 +193,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 320.0, 230.0, 650.0, 430.0 ],
+					"patching_rect" : [ 40.0, 297.0, 650.0, 430.0 ],
 					"sync" : 1
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-6",
-					"maxclass" : "toggle",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "int" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 241.0, 18.0, 24.0, 24.0 ],
-					"svg" : ""
 				}
 
 			}
@@ -218,8 +205,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "jit_matrix", "bang", "" ],
-					"patching_rect" : [ 241.0, 72.0, 49.0, 22.0 ],
-					"text" : "jit.world"
+					"patching_rect" : [ 76.0, 257.0, 111.0, 22.0 ],
+					"text" : "jit.world @enable 1"
 				}
 
 			}
@@ -262,6 +249,15 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-14", 0 ],
+					"order" : 1,
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"order" : 0,
 					"source" : [ "obj-2", 0 ]
 				}
 
@@ -273,15 +269,8 @@
 				}
 
 			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-4", 0 ],
-					"source" : [ "obj-6", 0 ]
-				}
-
-			}
  ],
-		"originid" : "pat-460",
+		"originid" : "pat-521",
 		"dependency_cache" : [ 			{
 				"name" : "blading.mov",
 				"bootpath" : "C74:/media/jitter",
