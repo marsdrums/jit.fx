@@ -3,13 +3,13 @@
 	<param name="tex0" type="int" default="0" />
 	<param name="textureMatrix0" type="mat4" state="TEXTURE0_MATRIX" />
 	<param name="texcoord" type="vec2" state="TEXCOORD" />
-	<param name="frame" type="int" state="FRAME" />
+	<param name="off" type="int" default="0" />
 	<param name="texDim" type="vec2" state="TEXDIM0" />
 	<language name="glsl" version="1.5">
 		<bind param="tex0" program="fp" />
 		<bind param="textureMatrix0" program="vp" />
 		<bind param="texcoord" program="vp" />
-		<bind param="frame" program="fp" />
+		<bind param="off" program="fp" />
 		<bind param="texDim" program="fp" />
 		<program name="vp" type="vertex"  >
 <![CDATA[
@@ -39,14 +39,14 @@ in jit_PerVertex {
 layout (location = 0) out vec4 outColor;
 
 uniform samplerJit0 tex0;
-uniform int frame;
+uniform int off;
 uniform vec2 texDim;
 
 
 void main(void) {
 
     int i = int(jit_in.texcoord.x);
-    int j = i + ((i&1)==(frame&1) ?-1:1); 
+    int j = i + ((i&1)==(off&1) ?-1:1); 
                 
     vec4 N = texelFetch(tex0,ivec2(j, jit_in.texcoord.y));
          outColor= texelFetch(tex0,ivec2(i, jit_in.texcoord.y));

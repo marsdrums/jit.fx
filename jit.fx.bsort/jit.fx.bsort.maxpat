@@ -40,25 +40,112 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
-					"id" : "obj-16",
+					"id" : "obj-13",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 572.0, 305.0, 106.0, 22.0 ],
-					"text" : "prepend param off"
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 320.0, 13.0, 58.0, 22.0 ],
+					"text" : "loadbang"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-15",
+					"id" : "obj-12",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 320.0, 53.0, 183.0, 22.0 ],
+					"text" : "output_texture 1, loop 1, vol 0., 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"data" : 					{
+						"clips" : [ 							{
+								"absolutepath" : "blading.mov",
+								"filename" : "blading.mov",
+								"filekind" : "moviefile",
+								"id" : "u475006674",
+								"loop" : 1,
+								"content_state" : 								{
+									"loop" : 1,
+									"vol" : 0.0
+								}
+
+							}
+ ]
+					}
+,
+					"drawto" : "",
+					"id" : "obj-10",
+					"loop" : 1,
+					"maxclass" : "jit.playlist",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "jit_gl_texture", "", "dictionary" ],
+					"output_texture" : 1,
+					"parameter_enable" : 0,
+					"patching_rect" : [ 320.0, 97.0, 150.0, 30.0 ],
+					"saved_attribute_attributes" : 					{
+						"candicane2" : 						{
+							"expression" : ""
+						}
+,
+						"candicane3" : 						{
+							"expression" : ""
+						}
+,
+						"candicane4" : 						{
+							"expression" : ""
+						}
+,
+						"candicane5" : 						{
+							"expression" : ""
+						}
+,
+						"candicane6" : 						{
+							"expression" : ""
+						}
+,
+						"candicane7" : 						{
+							"expression" : ""
+						}
+,
+						"candicane8" : 						{
+							"expression" : ""
+						}
+
+					}
+
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"filename" : "jit.fx.bsort.js",
+					"id" : "obj-2",
 					"maxclass" : "newobj",
-					"numinlets" : 5,
-					"numoutlets" : 4,
-					"outlettype" : [ "int", "", "", "int" ],
-					"patching_rect" : [ 572.0, 230.0, 69.0, 22.0 ],
-					"text" : "counter 0 1"
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 320.0, 158.0, 88.0, 22.0 ],
+					"saved_object_attributes" : 					{
+						"parameter_enable" : 0
+					}
+,
+					"text" : "v8 jit.fx.bsort.js",
+					"textfile" : 					{
+						"text" : "autowhatch = 1; inlets = 1; outlets = 1;\n\n\n//______ GRAB CONTEXT ______________________________________________________________________\n\nvar drawto = \"\";\ndeclareattribute(\"drawto\", null, \"dosetdrawto\", 0);\n\nvar implicitdrawto = \"\";\nvar swaplisten = null; // The listener for the jit.world\nvar explicitdrawto = false;\nvar proxy = null;\nvar swapListener = null;\n\nif(max.version >= 820) {\n    proxy = new JitterObject(\"jit.proxy\");\n}\n\nvar implicit_tracker = new JitterObject(\"jit_gl_implicit\"); // dummy oggetto gl\nvar implicit_lstnr = new JitterListener(implicit_tracker.name, implicit_callback);\n\nfunction implicit_callback(event) { \n\t// se non stai mettendo ctx a mano e se implicitdrawto != dal nome di implicit\n\tif(!explicitdrawto && implicitdrawto != implicit_tracker.drawto[0]) {\n\t\t// important! drawto is an array so get first element\n\t\timplicitdrawto = implicit_tracker.drawto[0];\n        //FF_Utils.Print(\"IMPLICIT CLL\", implicitdrawto);\n\t\tdosetdrawto(implicitdrawto);\n\t}\n}\nimplicit_callback.local = 1;\n\nfunction setDrawto(val) {\n\texplicitdrawto = true;\n\tdosetdrawto(val);\n};\n\nfunction dosetdrawto(newdrawto) {\n\tif(newdrawto == drawto || !newdrawto) {\n\t\t// bounce\n        //FF_Utils.Print(\"bouncer\");\n\t\treturn;\n\t}\n\tif(proxy !== undefined) {\n\t\tproxy.name = newdrawto;\n        // viene chiamato quando abbiamo classe\n        if(proxy.class !== undefined && proxy.class != \"\") {\n\t\t\t// drawto may be root render or sub-node\n\t\t\t// if root the class will return jit_gl_context_view\n\t\t\tif(proxy.class != \"jit_gl_context_view\") { // jit_gl_context_view = node dentro world\n\t\t\t\t// class is a sub-node, get the drawto on that\n\t\t\t\tproxydrawto = proxy.send(\"getdrawto\"); // prendi drawto di world che sarebbe nome del node\n\t\t\t\t// recurse until we get root\n\t\t\t\t// important! drawto is an array so get first element\n                //FF_Utils.Print(\"proxy class\", proxy.class);\n                //FF_Utils.Print(\"DIVERSo da contxt_view\", implicitdrawto);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);\n\t\t\t}\n\t\t}\n\t\telse {\n            // viene chiamato se non abbiamo classe\n\t\t\tproxydrawto = proxy.send(\"getdrawto\");\n\t\t\tif(proxydrawto !== null && proxydrawto !== undefined) {\n                //FF_Utils.Print(\"SE E NODE??\", proxydrawto[0]);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);  // name of the internal node\n\t\t\t}\n\t\t}\n\t}\n    //FF_Utils.Print(\"ASSEGNA drawto\", newdrawto);\n    drawto = newdrawto;\n    // chiama cose che vanno inizializzate quando c'è il drawto\n    // assegna listener per ctx\n    swapListener = new JitterListener(drawto, swapCallback);\n}\ndosetdrawto.local = 1;\n\nfunction destroyFindCTX() {\n\timplicit_lstnr.subjectname = \"\"\n\timplicit_tracker.freepeer();\n}\ndestroyFindCTX.local = 1;\n\nfunction notifydeleted() {\n    destroyFindCTX();\n    slab.freepeer();\n    //slab_hor.freepeer();\n    fdbkTex.freepeer();\n}\n/*\n// ___ GRAB JIT.WORLD BANG____________________________________________\nvar swapCallback = function(event) {\n    switch (event.eventname) {\n        case (\"swap\" || \"draw\"):\n        \t//bang();\n            // FF_Utils.Print(\"BANG\")\n            break;\n        //case \"mouse\": case \"mouseidle\": \n        //    FF_Utils.Print(\"MOUSE\", event.args)\n        //    break;\n        case \"willfree\":\n            //FF_Utils.Print(\"DESTROY\")\n            break;\n        default: \n            break;\n    }\n}\n*/\n\n\nvar slab = new JitterObject(\"jit.gl.slab\", drawto);\nslab.file = \"jit.fx.bsort.jxs\";\nslab.inputs = 1;\n\nvar fdbkTex = new JitterObject(\"jit_gl_texture\", drawto);\nfdbkTex.adapt = 1;\n\nfunction jit_gl_texture(inname){\n\n\tfdbkTex.jit_gl_texture(inname);\n\n\t\n\tfor(var i = 0; i < fdbkTex.dim[0]; i++){\n\n\t\tslab.param(\"off\", i);\n\t\tslab.jit_gl_texture(fdbkTex.name);\n\t\tslab.draw();\n\n\t\tfdbkTex.jit_gl_texture(slab.out_name);\t\n\t}\n\n\toutlet(0, \"jit_gl_texture\", fdbkTex.name);\n}",
+						"filename" : "jit.fx.bsort.js",
+						"flags" : 0,
+						"embed" : 0,
+						"autowatch" : 1
+					}
+
 				}
 
 			}
@@ -69,67 +156,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 727.0, 104.0, 673.0, 592.0 ],
+					"patching_rect" : [ 320.0, 230.0, 650.0, 430.0 ],
 					"sync" : 1
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-13",
-					"maxclass" : "button",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 508.0, 113.0, 24.0, 24.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"autofit" : 1,
-					"forceaspect" : 1,
-					"id" : "obj-11",
-					"maxclass" : "fpic",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "jit_matrix" ],
-					"patching_rect" : [ 508.0, 166.0, 100.0, 100.0 ],
-					"pic" : "usnm_93379-100k-2048-occlusion.jpg"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-9",
-					"maxclass" : "button",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "bang" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 409.0, 193.0, 24.0, 24.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"filename" : "jit.fx.bsort.jxs",
-					"id" : "obj-7",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "jit_gl_texture", "" ],
-					"patching_rect" : [ 365.0, 393.0, 216.0, 22.0 ],
-					"text" : "jit.gl.slab @file jit.fx.bsort.jxs @inputs 1",
-					"textfile" : 					{
-						"text" : "<jittershader name=\"default\">\n\t<description>Default Slab </description>\n\t<param name=\"tex0\" type=\"int\" default=\"0\" />\n\t<param name=\"textureMatrix0\" type=\"mat4\" state=\"TEXTURE0_MATRIX\" />\n\t<param name=\"texcoord\" type=\"vec2\" state=\"TEXCOORD\" />\n\t<param name=\"frame\" type=\"int\" state=\"FRAME\" />\n\t<param name=\"texDim\" type=\"vec2\" state=\"TEXDIM0\" />\n\t<language name=\"glsl\" version=\"1.5\">\n\t\t<bind param=\"tex0\" program=\"fp\" />\n\t\t<bind param=\"textureMatrix0\" program=\"vp\" />\n\t\t<bind param=\"texcoord\" program=\"vp\" />\n\t\t<bind param=\"frame\" program=\"fp\" />\n\t\t<bind param=\"texDim\" program=\"fp\" />\n\t\t<program name=\"vp\" type=\"vertex\"  >\n<![CDATA[\n#version 330 core\n\nin vec2 texcoord;\nout jit_PerVertex {\n\tvec2 texcoord;\n} jit_out;\nuniform mat4 textureMatrix0;\n\nvoid main(void) {\n\tgl_Position = vec4(texcoord*2 - 1, 0., 1.);\n\tjit_out.texcoord = vec2(textureMatrix0*vec4(texcoord, 0., 1.));\n\n}\n]]>\n</program>\n\n<program name=\"fp\" type=\"fragment\"  >\n<![CDATA[\n#version 330 core\n\nin jit_PerVertex {\n\tvec2 texcoord;\n} jit_in;\nlayout (location = 0) out vec4 outColor;\n\nuniform samplerJit0 tex0;\nuniform int frame;\nuniform vec2 texDim;\n\n\nvoid main(void) {\n\n    int i = int(jit_in.texcoord.x);\n    int j = i + ((i&1)==(frame&1) ?-1:1); \n                \n    vec4 N = texelFetch(tex0,ivec2(j, jit_in.texcoord.y));\n         outColor= texelFetch(tex0,ivec2(i, jit_in.texcoord.y));\n    if(  (length(N.rgb)< length(outColor.rgb) )!=(i>j) && min(j,i)>=0 && max(j,i)<int(texDim.x) ) outColor=N;\n        \n\n}\n]]>\n</program>\n</language>\n</jittershader>\n",
-						"filename" : "jit.fx.bsort.jxs",
-						"flags" : 0,
-						"embed" : 0,
-						"autowatch" : 1
-					}
-
 				}
 
 			}
@@ -141,7 +169,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 290.0, 126.0, 24.0, 24.0 ],
+					"patching_rect" : [ 241.0, 18.0, 24.0, 24.0 ],
 					"svg" : ""
 				}
 
@@ -153,63 +181,37 @@
 					"numinlets" : 1,
 					"numoutlets" : 3,
 					"outlettype" : [ "jit_matrix", "bang", "" ],
-					"patching_rect" : [ 290.0, 180.0, 49.0, 22.0 ],
+					"patching_rect" : [ 241.0, 72.0, 49.0, 22.0 ],
 					"text" : "jit.world"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-3",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "jit_gl_texture", "" ],
-					"patching_rect" : [ 405.0, 305.0, 116.0, 22.0 ],
-					"text" : "jit.gl.texture @thru 0"
 				}
 
 			}
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
-					"destination" : [ "obj-3", 0 ],
-					"source" : [ "obj-11", 0 ]
+					"destination" : [ "obj-2", 0 ],
+					"source" : [ "obj-10", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-11", 0 ],
+					"destination" : [ "obj-10", 0 ],
+					"source" : [ "obj-12", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-12", 0 ],
 					"source" : [ "obj-13", 0 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-16", 0 ],
-					"source" : [ "obj-15", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-7", 0 ],
-					"source" : [ "obj-16", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-7", 0 ],
-					"source" : [ "obj-3", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-9", 0 ],
-					"source" : [ "obj-4", 1 ]
+					"destination" : [ "obj-14", 0 ],
+					"source" : [ "obj-2", 0 ]
 				}
 
 			}
@@ -220,52 +222,19 @@
 				}
 
 			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-14", 0 ],
-					"order" : 0,
-					"source" : [ "obj-7", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-3", 0 ],
-					"order" : 1,
-					"source" : [ "obj-7", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-4", 0 ],
-					"order" : 2,
-					"source" : [ "obj-7", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-15", 0 ],
-					"order" : 0,
-					"source" : [ "obj-9", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-3", 0 ],
-					"order" : 1,
-					"source" : [ "obj-9", 0 ]
-				}
-
-			}
  ],
-		"originid" : "pat-440",
+		"originid" : "pat-460",
 		"dependency_cache" : [ 			{
-				"name" : "usnm_93379-100k-2048-occlusion.jpg",
-				"bootpath" : "C74:/media/jitter/models/smithsonian-gltf/pocillopora-damicornis",
-				"type" : "JPEG",
+				"name" : "blading.mov",
+				"bootpath" : "C74:/media/jitter",
+				"type" : "MooV",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "jit.fx.bsort.js",
+				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.bsort",
+				"patcherrelativepath" : ".",
+				"type" : "TEXT",
 				"implicit" : 1
 			}
  ],
