@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 59.0, 203.0, 1210.0, 795.0 ],
+		"rect" : [ 198.0, 203.0, 1210.0, 795.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -45,7 +45,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 543.0, 289.0, 106.0, 22.0 ],
+					"patching_rect" : [ 572.0, 305.0, 106.0, 22.0 ],
 					"text" : "prepend param off"
 				}
 
@@ -82,7 +82,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 529.0, 111.0, 24.0, 24.0 ]
+					"patching_rect" : [ 508.0, 113.0, 24.0, 24.0 ]
 				}
 
 			}
@@ -95,7 +95,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "jit_matrix" ],
-					"patching_rect" : [ 508.0, 166.0, 100.0, 35.526315789473685 ],
+					"patching_rect" : [ 508.0, 166.0, 100.0, 100.0 ],
 					"pic" : "usnm_93379-100k-2048-occlusion.jpg"
 				}
 
@@ -123,7 +123,7 @@
 					"patching_rect" : [ 365.0, 393.0, 216.0, 22.0 ],
 					"text" : "jit.gl.slab @file jit.fx.bsort.jxs @inputs 1",
 					"textfile" : 					{
-						"text" : "<jittershader name=\"default\">\n\t<description>Default Slab </description>\n\t<param name=\"tex0\" type=\"int\" default=\"0\" />\n\t<param name=\"textureMatrix0\" type=\"mat4\" state=\"TEXTURE0_MATRIX\" />\n\t<param name=\"texcoord\" type=\"vec2\" state=\"TEXCOORD\" />\n\t<param name=\"off\" type=\"float\" default=\"0.0\" />\n\t<language name=\"glsl\" version=\"1.5\">\n\t\t<bind param=\"tex0\" program=\"fp\" />\n\t\t<bind param=\"textureMatrix0\" program=\"vp\" />\n\t\t<bind param=\"texcoord\" program=\"vp\" />\n\t\t<bind param=\"off\" program=\"fp\" />\n\t\t<program name=\"vp\" type=\"vertex\"  >\n<![CDATA[\n#version 330 core\n\nin vec2 texcoord;\nout jit_PerVertex {\n\tvec2 texcoord;\n} jit_out;\nuniform mat4 textureMatrix0;\n\nvoid main(void) {\n\tgl_Position = vec4(texcoord*2 - 1, 0., 1.);\n\tjit_out.texcoord = vec2(textureMatrix0*vec4(texcoord, 0., 1.));\n\n}\n]]>\n</program>\n\n<program name=\"fp\" type=\"fragment\"  >\n<![CDATA[\n#version 330 core\n\nin jit_PerVertex {\n\tvec2 texcoord;\n} jit_in;\nlayout (location = 0) out vec4 outColor;\n\nuniform samplerJit0 tex0;\nuniform float off;\n\n\nvec4 sample_neighbor(){\n\n\treturn \tfloor(mod(jit_in.texcoord.x, 2) + off) == 0 ? \t\n\t\t\ttexelFetch(tex0, ivec2(jit_in.texcoord + vec2(1,0))) : \n\t\t\ttexelFetch(tex0, ivec2(jit_in.texcoord - vec2(1,0)));\n}\n\nvoid main(void) {\n\n\tvec4 this_sample = texelFetch(tex0, ivec2(jit_in.texcoord));\n\tvec4 nei_sample = sample_neighbor();\n\n\tif(floor(mod(jit_in.texcoord.x, 2) + 1) == 0){\n\t\toutColor = \t(this_sample.r + this_sample.g + this_sample.b) >= (nei_sample.r + nei_sample.g + nei_sample.b) ?\n\t\t\t\t\tthis_sample : nei_sample;\t\n\t} else {\n\t\toutColor = \t(this_sample.r + this_sample.g + this_sample.b) <= (nei_sample.r + nei_sample.g + nei_sample.b) ?\n\t\t\t\t\tthis_sample : nei_sample;\n\t}\n\n}\n]]>\n</program>\n</language>\n</jittershader>\n",
+						"text" : "<jittershader name=\"default\">\n\t<description>Default Slab </description>\n\t<param name=\"tex0\" type=\"int\" default=\"0\" />\n\t<param name=\"textureMatrix0\" type=\"mat4\" state=\"TEXTURE0_MATRIX\" />\n\t<param name=\"texcoord\" type=\"vec2\" state=\"TEXCOORD\" />\n\t<param name=\"frame\" type=\"int\" state=\"FRAME\" />\n\t<param name=\"texDim\" type=\"vec2\" state=\"TEXDIM0\" />\n\t<language name=\"glsl\" version=\"1.5\">\n\t\t<bind param=\"tex0\" program=\"fp\" />\n\t\t<bind param=\"textureMatrix0\" program=\"vp\" />\n\t\t<bind param=\"texcoord\" program=\"vp\" />\n\t\t<bind param=\"frame\" program=\"fp\" />\n\t\t<bind param=\"texDim\" program=\"fp\" />\n\t\t<program name=\"vp\" type=\"vertex\"  >\n<![CDATA[\n#version 330 core\n\nin vec2 texcoord;\nout jit_PerVertex {\n\tvec2 texcoord;\n} jit_out;\nuniform mat4 textureMatrix0;\n\nvoid main(void) {\n\tgl_Position = vec4(texcoord*2 - 1, 0., 1.);\n\tjit_out.texcoord = vec2(textureMatrix0*vec4(texcoord, 0., 1.));\n\n}\n]]>\n</program>\n\n<program name=\"fp\" type=\"fragment\"  >\n<![CDATA[\n#version 330 core\n\nin jit_PerVertex {\n\tvec2 texcoord;\n} jit_in;\nlayout (location = 0) out vec4 outColor;\n\nuniform samplerJit0 tex0;\nuniform int frame;\nuniform vec2 texDim;\n\n\nvoid main(void) {\n\n    int i = int(jit_in.texcoord.x);\n    int j = i + ((i&1)==(frame&1) ?-1:1); \n                \n    vec4 N = texelFetch(tex0,ivec2(j, jit_in.texcoord.y));\n         outColor= texelFetch(tex0,ivec2(i, jit_in.texcoord.y));\n    if(  (length(N.rgb)< length(outColor.rgb) )!=(i>j) && min(j,i)>=0 && max(j,i)<int(texDim.x) ) outColor=N;\n        \n\n}\n]]>\n</program>\n</language>\n</jittershader>\n",
 						"filename" : "jit.fx.bsort.jxs",
 						"flags" : 0,
 						"embed" : 0,
@@ -165,7 +165,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_gl_texture", "" ],
-					"patching_rect" : [ 325.0, 287.0, 116.0, 22.0 ],
+					"patching_rect" : [ 405.0, 305.0, 116.0, 22.0 ],
 					"text" : "jit.gl.texture @thru 0"
 				}
 
@@ -261,7 +261,7 @@
 
 			}
  ],
-		"originid" : "pat-152",
+		"originid" : "pat-440",
 		"dependency_cache" : [ 			{
 				"name" : "usnm_93379-100k-2048-occlusion.jpg",
 				"bootpath" : "C74:/media/jitter/models/smithsonian-gltf/pocillopora-damicornis",
