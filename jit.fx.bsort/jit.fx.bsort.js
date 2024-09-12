@@ -116,11 +116,11 @@ slab.inputs = 1;
 var fdbkTex = new JitterObject("jit_gl_texture", drawto);
 fdbkTex.adapt = 1;
 
-var _dim = 0;
+var _dimmode = 0;
 
-function dim(){ 
-	_dim = arguments[0];
-	slab.param("dim", _dim);
+function dimmode(){ 
+	_dimmode = arguments[0];
+	slab.param("dimmode", _dimmode);
 }
 
 function jit_gl_texture(inname){
@@ -128,7 +128,7 @@ function jit_gl_texture(inname){
 	fdbkTex.jit_gl_texture(inname);
 
 	
-	for(var i = 0; i < fdbkTex.dim[_dim]; i++){
+	for(var i = 0; i < fdbkTex.dim[_dimmode]; i++){
 
 		slab.param("off", i);
 		slab.jit_gl_texture(fdbkTex.name);
