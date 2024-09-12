@@ -5,12 +5,14 @@
 	<param name="texcoord" type="vec2" state="TEXCOORD" />
 	<param name="off" type="int" default="0" />
 	<param name="texDim" type="vec2" state="TEXDIM0" />
+	<param name="dim" type="int" default="0" />
 	<language name="glsl" version="1.5">
 		<bind param="tex0" program="fp" />
 		<bind param="textureMatrix0" program="vp" />
 		<bind param="texcoord" program="vp" />
 		<bind param="off" program="fp" />
 		<bind param="texDim" program="fp" />
+		<bind param="dim" program="fp" />
 		<program name="vp" type="vertex"  >
 <![CDATA[
 #version 330 core
@@ -39,18 +41,20 @@ in jit_PerVertex {
 layout (location = 0) out vec4 outColor;
 
 uniform samplerJit0 tex0;
-uniform int off;
+uniform int off, dim;
 uniform vec2 texDim;
-
+float color_sum(vec4 c){
+	return c.r + c.g + c.b + c.a;
+}
 
 void main(void) {
 
-    int i = int(jit_in.texcoord.x);
+    int i = int(jit_in.texcoord[dim]);
     int j = i + ((i&1)==(off&1) ?-1:1); 
                 
-    vec4 N = texelFetch(tex0,ivec2(j, jit_in.texcoord.y));
-         outColor= texelFetch(tex0,ivec2(i, jit_in.texcoord.y));
-    if(  (length(N.rgb)< length(outColor.rgb) )!=(i>j) && min(j,i)>=0 && max(j,i)<int(texDim.x) ) outColor=N;
+    vec4 N = 		texelFetch(tex0, (dim == 0 ? ivec2(j, jit_in.texcoord.y) : ivec2(jit_in.texcoord.x, j)));
+         outColor = texelFetch(tex0, (dim == 0 ? ivec2(i, jit_in.texcoord.y) : ivec2(jit_in.texcoord.x, i)));
+    if(  (color_sum(N) < color_sum(outColor) )!=(i>j) && min(j,i)>=0 && max(j,i)<int(texDim[dim]) ) outColor=N;
         
 
 }
