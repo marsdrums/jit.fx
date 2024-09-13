@@ -119,6 +119,7 @@ slab_rot.inputs = 1;
 
 var fdbkTex = new JitterObject("jit_gl_texture", drawto);
 fdbkTex.adapt = 1;
+fdbkTex.wrap = "repeat repeat repeat";
 
 var _dimmode = 0;
 var _sortmode = 0;

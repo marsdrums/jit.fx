@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 484.0, 165.0, 1036.0, 795.0 ],
+		"rect" : [ 521.0, 139.0, 862.0, 795.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -39,18 +39,6 @@
 		"subpatcher_template" : "",
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
-				"box" : 				{
-					"id" : "obj-1",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 730.0, 112.0, 80.0, 22.0 ],
-					"text" : "loadmess 0.1"
-				}
-
-			}
-, 			{
 				"box" : 				{
 					"format" : 6,
 					"id" : "obj-5",
@@ -227,10 +215,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "track1.mov",
-								"filename" : "track1.mov",
+								"absolutepath" : "blading.mov",
+								"filename" : "blading.mov",
 								"filekind" : "moviefile",
-								"id" : "u596005419",
+								"id" : "u396010165",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -301,7 +289,7 @@
 ,
 					"text" : "v8 jit.fx.pixelsorting.js",
 					"textfile" : 					{
-						"text" : "autowhatch = 1; inlets = 1; outlets = 1;\n\n\n//______ GRAB CONTEXT ______________________________________________________________________\n\nvar drawto = \"\";\ndeclareattribute(\"drawto\", null, \"dosetdrawto\", 0);\n\nvar implicitdrawto = \"\";\nvar swaplisten = null; // The listener for the jit.world\nvar explicitdrawto = false;\nvar proxy = null;\nvar swapListener = null;\n\nif(max.version >= 820) {\n    proxy = new JitterObject(\"jit.proxy\");\n}\n\nvar implicit_tracker = new JitterObject(\"jit_gl_implicit\"); // dummy oggetto gl\nvar implicit_lstnr = new JitterListener(implicit_tracker.name, implicit_callback);\n\nfunction implicit_callback(event) { \n\t// se non stai mettendo ctx a mano e se implicitdrawto != dal nome di implicit\n\tif(!explicitdrawto && implicitdrawto != implicit_tracker.drawto[0]) {\n\t\t// important! drawto is an array so get first element\n\t\timplicitdrawto = implicit_tracker.drawto[0];\n        //FF_Utils.Print(\"IMPLICIT CLL\", implicitdrawto);\n\t\tdosetdrawto(implicitdrawto);\n\t}\n}\nimplicit_callback.local = 1;\n\nfunction setDrawto(val) {\n\texplicitdrawto = true;\n\tdosetdrawto(val);\n};\n\nfunction dosetdrawto(newdrawto) {\n\tif(newdrawto == drawto || !newdrawto) {\n\t\t// bounce\n        //FF_Utils.Print(\"bouncer\");\n\t\treturn;\n\t}\n\tif(proxy !== undefined) {\n\t\tproxy.name = newdrawto;\n        // viene chiamato quando abbiamo classe\n        if(proxy.class !== undefined && proxy.class != \"\") {\n\t\t\t// drawto may be root render or sub-node\n\t\t\t// if root the class will return jit_gl_context_view\n\t\t\tif(proxy.class != \"jit_gl_context_view\") { // jit_gl_context_view = node dentro world\n\t\t\t\t// class is a sub-node, get the drawto on that\n\t\t\t\tproxydrawto = proxy.send(\"getdrawto\"); // prendi drawto di world che sarebbe nome del node\n\t\t\t\t// recurse until we get root\n\t\t\t\t// important! drawto is an array so get first element\n                //FF_Utils.Print(\"proxy class\", proxy.class);\n                //FF_Utils.Print(\"DIVERSo da contxt_view\", implicitdrawto);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);\n\t\t\t}\n\t\t}\n\t\telse {\n            // viene chiamato se non abbiamo classe\n\t\t\tproxydrawto = proxy.send(\"getdrawto\");\n\t\t\tif(proxydrawto !== null && proxydrawto !== undefined) {\n                //FF_Utils.Print(\"SE E NODE??\", proxydrawto[0]);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);  // name of the internal node\n\t\t\t}\n\t\t}\n\t}\n    //FF_Utils.Print(\"ASSEGNA drawto\", newdrawto);\n    drawto = newdrawto;\n    // chiama cose che vanno inizializzate quando c'è il drawto\n    // assegna listener per ctx\n    swapListener = new JitterListener(drawto, swapCallback);\n}\ndosetdrawto.local = 1;\n\nfunction destroyFindCTX() {\n\timplicit_lstnr.subjectname = \"\"\n\timplicit_tracker.freepeer();\n}\ndestroyFindCTX.local = 1;\n\nfunction notifydeleted() {\n    destroyFindCTX();\n    slab.freepeer();\n    //slab_hor.freepeer();\n    fdbkTex.freepeer();\n}\n/*\n// ___ GRAB JIT.WORLD BANG____________________________________________\nvar swapCallback = function(event) {\n    switch (event.eventname) {\n        case (\"swap\" || \"draw\"):\n        \t//bang();\n            // FF_Utils.Print(\"BANG\")\n            break;\n        //case \"mouse\": case \"mouseidle\": \n        //    FF_Utils.Print(\"MOUSE\", event.args)\n        //    break;\n        case \"willfree\":\n            //FF_Utils.Print(\"DESTROY\")\n            break;\n        default: \n            break;\n    }\n}\n*/\n\n\nvar slab = new JitterObject(\"jit.gl.slab\", drawto);\nslab.file = \"jit.fx.pixelsorting.jxs\";\nslab.inputs = 1;\n\nvar slab_rot = new JitterObject(\"jit.gl.slab\", drawto);\nslab_rot.file = \"jit.fx.pixelsorting_rot.jxs\";\nslab_rot.inputs = 1;\n\nvar fdbkTex = new JitterObject(\"jit_gl_texture\", drawto);\nfdbkTex.adapt = 1;\n\nvar _dimmode = 0;\nvar _sortmode = 0;\nvar _sortmode = 0;\nvar _threshold = 0.4;\nvar _sortdir = 0;\nvar _angle = 0;\n\nfunction dimmode(){ \n\t_dimmode = arguments[0];\n\tslab.param(\"dimmode\", _dimmode);\n}\n\nfunction sortmode(){\n\t_sortmode = arguments[0];\n\tslab.param(\"sortmode\", _sortmode);\n}\n\nfunction threshold(){\n\t_threshold = arguments[0];\n\tslab.param(\"threshold\", _threshold);\n}\n\nfunction sortmode(){\n\t_sortmode = arguments[0];\n\tslab.param(\"sortmode\", _sortmode);\n}\n\nfunction sortdir(){\n\t_sortdir = arguments[0];\n\tslab.param(\"sortdir\", _sortdir);\n}\n\nfunction angle(){\n\t_angle = Math.PI*arguments[0]/180;\n}\n\nfunction jit_gl_texture(inname){\n\n\tslab_rot.param(\"sinAngle\", Math.sin(_angle));\n\tslab_rot.param(\"cosAngle\", Math.cos(_angle));\n\tslab_rot.jit_gl_texture(inname);\n\tslab_rot.draw();\n\n\tfdbkTex.jit_gl_texture(slab_rot.out_name);\n\t\n\tfor(var i = 0; i < fdbkTex.dim[_dimmode]; i++){\n\n\t\tslab.param(\"off\", i);\n\t\tslab.jit_gl_texture(fdbkTex.name);\n\t\tslab.draw();\n\n\t\tfdbkTex.jit_gl_texture(slab.out_name);\t\n\t}\n\n\tslab_rot.param(\"sinAngle\", Math.sin(-_angle));\n\tslab_rot.param(\"cosAngle\", Math.cos(-_angle));\n\tslab_rot.jit_gl_texture(fdbkTex.name);\n\tslab_rot.draw();\n\n\toutlet(0, \"jit_gl_texture\", slab_rot.out_name);\n}",
+						"text" : "autowhatch = 1; inlets = 1; outlets = 1;\n\n\n//______ GRAB CONTEXT ______________________________________________________________________\n\nvar drawto = \"\";\ndeclareattribute(\"drawto\", null, \"dosetdrawto\", 0);\n\nvar implicitdrawto = \"\";\nvar swaplisten = null; // The listener for the jit.world\nvar explicitdrawto = false;\nvar proxy = null;\nvar swapListener = null;\n\nif(max.version >= 820) {\n    proxy = new JitterObject(\"jit.proxy\");\n}\n\nvar implicit_tracker = new JitterObject(\"jit_gl_implicit\"); // dummy oggetto gl\nvar implicit_lstnr = new JitterListener(implicit_tracker.name, implicit_callback);\n\nfunction implicit_callback(event) { \n\t// se non stai mettendo ctx a mano e se implicitdrawto != dal nome di implicit\n\tif(!explicitdrawto && implicitdrawto != implicit_tracker.drawto[0]) {\n\t\t// important! drawto is an array so get first element\n\t\timplicitdrawto = implicit_tracker.drawto[0];\n        //FF_Utils.Print(\"IMPLICIT CLL\", implicitdrawto);\n\t\tdosetdrawto(implicitdrawto);\n\t}\n}\nimplicit_callback.local = 1;\n\nfunction setDrawto(val) {\n\texplicitdrawto = true;\n\tdosetdrawto(val);\n};\n\nfunction dosetdrawto(newdrawto) {\n\tif(newdrawto == drawto || !newdrawto) {\n\t\t// bounce\n        //FF_Utils.Print(\"bouncer\");\n\t\treturn;\n\t}\n\tif(proxy !== undefined) {\n\t\tproxy.name = newdrawto;\n        // viene chiamato quando abbiamo classe\n        if(proxy.class !== undefined && proxy.class != \"\") {\n\t\t\t// drawto may be root render or sub-node\n\t\t\t// if root the class will return jit_gl_context_view\n\t\t\tif(proxy.class != \"jit_gl_context_view\") { // jit_gl_context_view = node dentro world\n\t\t\t\t// class is a sub-node, get the drawto on that\n\t\t\t\tproxydrawto = proxy.send(\"getdrawto\"); // prendi drawto di world che sarebbe nome del node\n\t\t\t\t// recurse until we get root\n\t\t\t\t// important! drawto is an array so get first element\n                //FF_Utils.Print(\"proxy class\", proxy.class);\n                //FF_Utils.Print(\"DIVERSo da contxt_view\", implicitdrawto);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);\n\t\t\t}\n\t\t}\n\t\telse {\n            // viene chiamato se non abbiamo classe\n\t\t\tproxydrawto = proxy.send(\"getdrawto\");\n\t\t\tif(proxydrawto !== null && proxydrawto !== undefined) {\n                //FF_Utils.Print(\"SE E NODE??\", proxydrawto[0]);\n\n\t\t\t\treturn dosetdrawto(proxydrawto[0]);  // name of the internal node\n\t\t\t}\n\t\t}\n\t}\n    //FF_Utils.Print(\"ASSEGNA drawto\", newdrawto);\n    drawto = newdrawto;\n    // chiama cose che vanno inizializzate quando c'è il drawto\n    // assegna listener per ctx\n    swapListener = new JitterListener(drawto, swapCallback);\n}\ndosetdrawto.local = 1;\n\nfunction destroyFindCTX() {\n\timplicit_lstnr.subjectname = \"\"\n\timplicit_tracker.freepeer();\n}\ndestroyFindCTX.local = 1;\n\nfunction notifydeleted() {\n    destroyFindCTX();\n    slab.freepeer();\n    //slab_hor.freepeer();\n    fdbkTex.freepeer();\n}\n/*\n// ___ GRAB JIT.WORLD BANG____________________________________________\nvar swapCallback = function(event) {\n    switch (event.eventname) {\n        case (\"swap\" || \"draw\"):\n        \t//bang();\n            // FF_Utils.Print(\"BANG\")\n            break;\n        //case \"mouse\": case \"mouseidle\": \n        //    FF_Utils.Print(\"MOUSE\", event.args)\n        //    break;\n        case \"willfree\":\n            //FF_Utils.Print(\"DESTROY\")\n            break;\n        default: \n            break;\n    }\n}\n*/\n\n\nvar slab = new JitterObject(\"jit.gl.slab\", drawto);\nslab.file = \"jit.fx.pixelsorting.jxs\";\nslab.inputs = 1;\n\nvar slab_rot = new JitterObject(\"jit.gl.slab\", drawto);\nslab_rot.file = \"jit.fx.pixelsorting_rot.jxs\";\nslab_rot.inputs = 1;\n\nvar fdbkTex = new JitterObject(\"jit_gl_texture\", drawto);\nfdbkTex.adapt = 1;\nfdbkTex.wrap = \"repeat repeat repeat\";\n\nvar _dimmode = 0;\nvar _sortmode = 0;\nvar _sortmode = 0;\nvar _threshold = 0.4;\nvar _sortdir = 0;\nvar _angle = 0;\n\nfunction dimmode(){ \n\t_dimmode = arguments[0];\n\tslab.param(\"dimmode\", _dimmode);\n}\n\nfunction sortmode(){\n\t_sortmode = arguments[0];\n\tslab.param(\"sortmode\", _sortmode);\n}\n\nfunction threshold(){\n\t_threshold = arguments[0];\n\tslab.param(\"threshold\", _threshold);\n}\n\nfunction sortmode(){\n\t_sortmode = arguments[0];\n\tslab.param(\"sortmode\", _sortmode);\n}\n\nfunction sortdir(){\n\t_sortdir = arguments[0];\n\tslab.param(\"sortdir\", _sortdir);\n}\n\nfunction angle(){\n\t_angle = Math.PI*arguments[0]/180;\n}\n\nfunction jit_gl_texture(inname){\n\n\tslab_rot.param(\"sinAngle\", Math.sin(_angle));\n\tslab_rot.param(\"cosAngle\", Math.cos(_angle));\n\tslab_rot.jit_gl_texture(inname);\n\tslab_rot.draw();\n\n\tfdbkTex.jit_gl_texture(slab_rot.out_name);\n\t\n\tfor(var i = 0; i < fdbkTex.dim[_dimmode]; i++){\n\n\t\tslab.param(\"off\", i);\n\t\tslab.jit_gl_texture(fdbkTex.name);\n\t\tslab.draw();\n\n\t\tfdbkTex.jit_gl_texture(slab.out_name);\t\n\t}\n\n\tslab_rot.param(\"sinAngle\", Math.sin(-_angle));\n\tslab_rot.param(\"cosAngle\", Math.cos(-_angle));\n\tslab_rot.jit_gl_texture(fdbkTex.name);\n\tslab_rot.draw();\n\n\toutlet(0, \"jit_gl_texture\", slab_rot.out_name);\n}",
 						"filename" : "jit.fx.pixelsorting.js",
 						"flags" : 0,
 						"embed" : 0,
@@ -337,13 +325,6 @@
 			}
  ],
 		"lines" : [ 			{
-				"patchline" : 				{
-					"destination" : [ "obj-5", 0 ],
-					"source" : [ "obj-1", 0 ]
-				}
-
-			}
-, 			{
 				"patchline" : 				{
 					"destination" : [ "obj-2", 0 ],
 					"source" : [ "obj-10", 0 ]
@@ -467,16 +448,16 @@
  ],
 		"originid" : "pat-279",
 		"dependency_cache" : [ 			{
+				"name" : "blading.mov",
+				"bootpath" : "C74:/media/jitter",
+				"type" : "MooV",
+				"implicit" : 1
+			}
+, 			{
 				"name" : "jit.fx.pixelsorting.js",
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.pixelsorting",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "track1.mov",
-				"bootpath" : "C74:/media/jitter",
-				"type" : "MooV",
 				"implicit" : 1
 			}
  ],
