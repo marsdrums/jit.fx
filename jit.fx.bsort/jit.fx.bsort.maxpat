@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 511.0, 182.0, 1210.0, 795.0 ],
+		"rect" : [ 506.0, 165.0, 1210.0, 795.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -106,7 +106,7 @@
 								"absolutepath" : "blading.mov",
 								"filename" : "blading.mov",
 								"filekind" : "moviefile",
-								"id" : "u651000751",
+								"id" : "u706003754",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -270,7 +270,7 @@
 
 			}
  ],
-		"originid" : "pat-521",
+		"originid" : "pat-2",
 		"dependency_cache" : [ 			{
 				"name" : "blading.mov",
 				"bootpath" : "C74:/media/jitter",
