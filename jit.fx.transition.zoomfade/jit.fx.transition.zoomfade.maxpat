@@ -116,10 +116,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "crashtest.mov",
-								"filename" : "crashtest.mov",
+								"absolutepath" : "sunflower.mp4",
+								"filename" : "sunflower.mp4",
 								"filekind" : "moviefile",
-								"id" : "u924003099",
+								"id" : "u867005860",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -452,16 +452,16 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "crashtest.mov",
-				"bootpath" : "C74:/media/jitter",
-				"type" : "MooV",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "jit.fx.transition.zoomfade.js",
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.transition.zoomfade",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "sunflower.mp4",
+				"bootpath" : "C74:/media/jitter",
+				"type" : "mpg4",
 				"implicit" : 1
 			}
  ],

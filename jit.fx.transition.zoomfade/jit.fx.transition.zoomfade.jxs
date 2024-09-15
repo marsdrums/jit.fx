@@ -57,8 +57,8 @@ vec2 mirror_repeat(vec2 uv){
 
 void main(void) {
 
-	vec2 zoom_in_uv = jit_in.uv / (1 + zoomfade);
-	vec2 zoom_out_uv = jit_in.uv / (0.5 + zoomfade*0.5);
+	vec2 zoom_in_uv = jit_in.uv / (1 + zoomfade*2);
+	vec2 zoom_out_uv = jit_in.uv / (0.25 + zoomfade*0.75);
 	zoom_in_uv = vec2(texMat0 * vec4(zoom_in_uv*0.5 + 0.5, 0, 1));
 	zoom_out_uv = vec2(texMat1 * vec4(zoom_out_uv*0.5 + 0.5, 0, 1));
 	zoom_out_uv = mirror_repeat(zoom_out_uv);
