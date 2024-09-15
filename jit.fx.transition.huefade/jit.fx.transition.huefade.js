@@ -110,28 +110,11 @@ slab.file = "jit.fx.transition.huefade.jxs";
 slab.inputs = 2;
 
 var _huefade = 0.0;
-var _smoothness = 0.001;
-var _smoothA = _huefade - _smoothness;
-var _smoothB = _huefade + _smoothness;
 
 
 function huefade(){
 	_huefade = arguments[0];
 	slab.param("huefade", _huefade);
-	_smoothA = _huefade - _smoothness;
-	_smoothB = _huefade + _smoothness;
-	slab.param("smoothA", _smoothA);
-	slab.param("smoothB", _smoothB);
-	slab.param("smoothness", _smoothness);
-}
-
-function smoothness(){
-	_smoothness = Math.max(0.001, arguments[0]);
-	_smoothA = _huefade - _smoothness;
-	_smoothB = _huefade + _smoothness;
-	slab.param("smoothA", _smoothA);
-	slab.param("smoothB", _smoothB);
-	slab.param("smoothness", _smoothness);
 }
 
 function jit_gl_texture(inname){
@@ -140,9 +123,15 @@ function jit_gl_texture(inname){
 		slab.activeinput = 1;
 		slab.jit_gl_texture(inname);
 	} else {
-		slab.activeinput = 0;
-		slab.jit_gl_texture(inname);
-		slab.draw();
-		outlet(0, "jit_gl_texture", slab.out_name);	
+		
+		if(_huefade == 0){
+			outlet(0, "jit_gl_texture", inname);	
+		}
+		else{
+			slab.activeinput = 0;
+			slab.jit_gl_texture(inname);
+			slab.draw();
+			outlet(0, "jit_gl_texture", slab.out_name);				
+		}
 	}
 }
