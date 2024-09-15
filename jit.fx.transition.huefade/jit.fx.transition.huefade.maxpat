@@ -56,10 +56,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "dishes.mov",
-								"filename" : "dishes.mov",
+								"absolutepath" : "chickens.mp4",
+								"filename" : "chickens.mp4",
 								"filekind" : "moviefile",
-								"id" : "u070011000",
+								"id" : "u079008337",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -351,9 +351,9 @@
  ],
 		"originid" : "pat-79",
 		"dependency_cache" : [ 			{
-				"name" : "dishes.mov",
+				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",
-				"type" : "MooV",
+				"type" : "mpg4",
 				"implicit" : 1
 			}
 , 			{
