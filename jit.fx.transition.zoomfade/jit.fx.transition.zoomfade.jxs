@@ -1,0 +1,74 @@
+<jittershader name="default">
+	<description>Default Slab </description>
+	<param name="tex0" type="int" default="0" />
+	<param name="tex1" type="int" default="1" />
+	<param name="uv" type="vec2" state="TEXCOORD" />
+	<param name="texMat0" type="mat4" state="TEXTURE0_MATRIX" />
+	<param name="texMat1" type="mat4" state="TEXTURE1_MATRIX" />
+  	<param name="zoomfade" type="float" default="0.0" />
+  	<param name="texDim1" type="vec2" state="TEXDIM1" />
+	<language name="glsl" version="1.5">
+		<bind param="tex0" program="fp" />
+		<bind param="tex1" program="fp" />
+		<bind param="uv" program="vp" />
+		<bind param="texMat0" program="fp" />
+		<bind param="texMat1" program="fp" />
+    	<bind param="zoomfade" program="fp" />
+    	<bind param="texDim1" program="fp" />
+		<program name="vp" type="vertex"  >
+<![CDATA[
+#version 330 core
+
+in vec2 uv;
+
+out jit_PerVertex {
+	vec2 uv;
+} jit_out;
+
+void main(void) {
+	gl_Position = vec4(uv*2 - 1, 0, 1);
+	jit_out.uv = uv*2 - 1;
+}
+]]>
+</program>
+
+<program name="fp" type="fragment"  >
+<![CDATA[
+#version 330 core
+
+
+layout (location = 0) out vec4 outColor;
+
+uniform samplerJit0 tex0, tex1;
+uniform mat4 texMat0, texMat1;
+uniform float zoomfade;
+uniform vec2 texDim1;
+
+in jit_PerVertex {
+	vec2 uv;
+} jit_in;
+
+vec2 mirror_repeat(vec2 uv){
+	uv = mod(uv, texDim1*2);
+	uv.x = uv.x > texDim1.x ? 2 * texDim1.x - uv.x - 1 : uv.x;
+	uv.y = uv.y > texDim1.y ? 2 * texDim1.y - uv.y - 1 : uv.y;
+	return uv;
+}
+
+void main(void) {
+
+	vec2 zoom_in_uv = jit_in.uv / (1 + zoomfade);
+	vec2 zoom_out_uv = jit_in.uv / (0.5 + zoomfade*0.5);
+	zoom_in_uv = vec2(texMat0 * vec4(zoom_in_uv*0.5 + 0.5, 0, 1));
+	zoom_out_uv = vec2(texMat1 * vec4(zoom_out_uv*0.5 + 0.5, 0, 1));
+	zoom_out_uv = mirror_repeat(zoom_out_uv);
+	vec4 a = texture(tex0, zoom_in_uv);
+	vec4 b = texture(tex1, zoom_out_uv);
+	float interp = smoothstep(0.3,0.7,zoomfade);
+	outColor = mix(a, b, interp);
+
+}
+]]>
+</program>
+</language>
+</jittershader>
