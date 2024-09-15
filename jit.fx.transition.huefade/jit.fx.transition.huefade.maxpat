@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 646.0, 100.0, 973.0, 881.0 ],
+		"rect" : [ 646.0, 100.0, 462.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -56,10 +56,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "chickens.mp4",
-								"filename" : "chickens.mp4",
+								"absolutepath" : "dishes.mov",
+								"filename" : "dishes.mov",
 								"filekind" : "moviefile",
-								"id" : "u896009878",
+								"id" : "u070011000",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -351,9 +351,9 @@
  ],
 		"originid" : "pat-79",
 		"dependency_cache" : [ 			{
-				"name" : "chickens.mp4",
+				"name" : "dishes.mov",
 				"bootpath" : "C74:/media/jitter",
-				"type" : "mpg4",
+				"type" : "MooV",
 				"implicit" : 1
 			}
 , 			{

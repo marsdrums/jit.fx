@@ -20,11 +20,13 @@ uniform mat4 texMat;
 
 out jit_PerVertex {
 	vec2 uv;
+	vec2 normUV;
 } jit_out;
 
 void main(void) {
 	gl_Position = vec4(uv*2 - 1, 0, 1);
 	jit_out.uv = (texMat * vec4(uv,0,1)).xy;
+	jit_out.normUV = vec2(uv.x, 1 - uv.y);
 }
 ]]>
 </program>
@@ -36,11 +38,13 @@ void main(void) {
 
 layout (location = 0) out vec4 outColor;
 
-uniform samplerJit0 tex0, tex1;
+uniform samplerJit0 tex0;
+uniform sampler2D tex1;
 uniform float huefade;
 
 in jit_PerVertex {
 	vec2 uv;
+	vec2 normUV;
 } jit_in;
 
 /*
@@ -80,7 +84,7 @@ float rgb2hue(vec3 col) {
 void main(void) {
 
 	vec4 a = texelFetch(tex0, ivec2(jit_in.uv));
-	vec4 b = texelFetch(tex1, ivec2(jit_in.uv));
+	vec4 b = texture(tex1, jit_in.normUV);
 
 	float huea = rgb2hue(a.rgb) * (1 - huefade);
 	float hueb = rgb2hue(b.rgb) * huefade;

@@ -109,6 +109,9 @@ var slab = new JitterObject("jit.gl.slab", drawto);
 slab.file = "jit.fx.transition.huefade.jxs";
 slab.inputs = 2;
 
+var right_tex = new JitterObject("jit.gl.texture", drawto);
+right_tex.rectangle = 0;
+
 var _huefade = 0.0;
 
 
@@ -121,9 +124,10 @@ function jit_gl_texture(inname){
 
 	if(inlet == 1){
 		slab.activeinput = 1;
-		slab.jit_gl_texture(inname);
+		right_tex.jit_gl_texture(inname);
+		slab.jit_gl_texture(right_tex.name);
 	} else {
-		
+
 		if(_huefade == 0){
 			outlet(0, "jit_gl_texture", inname);	
 		}
