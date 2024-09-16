@@ -277,7 +277,7 @@
 						"originid" : "pat-158"
 					}
 ,
-					"patching_rect" : [ 274.0, 124.0, 61.0, 22.0 ],
+					"patching_rect" : [ 274.0, 127.0, 61.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -344,10 +344,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "blading.mov",
-								"filename" : "blading.mov",
+								"absolutepath" : "countdown.mov",
+								"filename" : "countdown.mov",
 								"filekind" : "moviefile",
-								"id" : "u115011300",
+								"id" : "u485011388",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -702,7 +702,7 @@
  ],
 		"originid" : "pat-136",
 		"dependency_cache" : [ 			{
-				"name" : "blading.mov",
+				"name" : "countdown.mov",
 				"bootpath" : "C74:/media/jitter",
 				"type" : "MooV",
 				"implicit" : 1
