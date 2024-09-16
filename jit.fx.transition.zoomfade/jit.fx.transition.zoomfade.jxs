@@ -7,6 +7,8 @@
 	<param name="texMat1" type="mat4" state="TEXTURE1_MATRIX" />
   	<param name="zoomfade" type="float" default="0.0" />
   	<param name="texDim1" type="vec2" state="TEXDIM1" />
+  	<param name="zoomFactor0" type="float" default="1.0" />
+  	<param name="zoomFactor1" type="float" default="1.0" />
 	<language name="glsl" version="1.5">
 		<bind param="tex0" program="fp" />
 		<bind param="tex1" program="fp" />
@@ -15,6 +17,8 @@
 		<bind param="texMat1" program="fp" />
     	<bind param="zoomfade" program="fp" />
     	<bind param="texDim1" program="fp" />
+    	<bind param="zoomFactor0" program="fp" />
+    	<bind param="zoomFactor1" program="fp" />
 		<program name="vp" type="vertex"  >
 <![CDATA[
 #version 330 core
@@ -43,6 +47,7 @@ uniform samplerJit0 tex0, tex1;
 uniform mat4 texMat0, texMat1;
 uniform float zoomfade;
 uniform vec2 texDim1;
+uniform float zoomFactor0, zoomFactor1;
 
 in jit_PerVertex {
 	vec2 uv;
@@ -57,8 +62,8 @@ vec2 mirror_repeat(vec2 uv){
 
 void main(void) {
 
-	vec2 zoom_in_uv = jit_in.uv / (1 + zoomfade*2);
-	vec2 zoom_out_uv = jit_in.uv / (0.25 + zoomfade*0.75);
+	vec2 zoom_in_uv = jit_in.uv * zoomFactor0;// / pow(2, zoomfade*zoom);
+	vec2 zoom_out_uv = jit_in.uv * zoomFactor1;// * pow(2, (1 - zoomfade)*zoom);
 	zoom_in_uv = vec2(texMat0 * vec4(zoom_in_uv*0.5 + 0.5, 0, 1));
 	zoom_out_uv = vec2(texMat1 * vec4(zoom_out_uv*0.5 + 0.5, 0, 1));
 	zoom_out_uv = mirror_repeat(zoom_out_uv);

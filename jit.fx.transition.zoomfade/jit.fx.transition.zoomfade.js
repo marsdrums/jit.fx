@@ -84,6 +84,8 @@ destroyFindCTX.local = 1;
 function notifydeleted() {
     destroyFindCTX();
     slab.freepeer();
+    slab_blur.freepeer();
+    fdbkTex.freepeer();
 }
 /*
 // ___ GRAB JIT.WORLD BANG____________________________________________
@@ -109,11 +111,49 @@ var slab = new JitterObject("jit.gl.slab", drawto);
 slab.file = "jit.fx.transition.zoomfade.jxs";
 slab.inputs = 2;
 
+var slab_blur = new JitterObject("jit.gl.slab", drawto);
+slab_blur.file = "jit.fx.filter.radial.jxs";
+slab_blur.inputs = 1;
+slab_blur.param("mode", 0);
+
+var fdbkTex = new JitterObject("jit_gl_texture", drawto);
+fdbkTex.adapt = 1;
+
 var _zoomfade = 0.0;
+var prevzoomfade = 0.0;
+var _motionblur = 1;
+var _bluramount = 6;
+var _zoom = 1;
+var amt;
+var tile = new Array(2);
+
+slab.param("zoomfade", _zoomfade);
+slab.param("zoomFactor0", 1 / Math.pow(2, _zoomfade * _zoom));
+slab.param("zoomFactor1", Math.pow(2, (1 - _zoomfade) * _zoom));
+
+function update_zoomfactors(){
+
+	slab.param("zoomFactor0", 1 / Math.pow(2, _zoomfade * _zoom));
+	slab.param("zoomFactor1", Math.pow(2, (1 - _zoomfade) * _zoom));	
+}
 
 function zoomfade(){
 	_zoomfade = arguments[0];
 	slab.param("zoomfade", _zoomfade);
+	update_zoomfactors();
+}
+
+function motionblur(){
+	_motionblur = arguments[0];
+}
+
+function bluramount(){
+	_bluramount = arguments[0] * 6;
+}
+
+function zoom(){
+	_zoom = arguments[0];
+	update_zoomfactors();
 }
 
 function jit_gl_texture(inname){
@@ -125,6 +165,35 @@ function jit_gl_texture(inname){
 		slab.activeinput = 0;
 		slab.jit_gl_texture(inname);
 		slab.draw();
-		outlet(0, "jit_gl_texture", slab.out_name);	
+
+		amt = _zoomfade - prevzoomfade;
+
+		if(_motionblur == 1 && amt != 0){
+
+			amt = Math.abs(amt) * _zoom * _bluramount;
+
+			fdbkTex.jit_gl_texture(slab.out_name);
+			slab_blur.param("center", [fdbkTex.dim[0]*0.5, fdbkTex.dim[1]*0.5]);
+			
+			for(var i = 0; i < 10; i++){
+
+				tile[0] = 128 * (i % 8);
+				tile[1] = 128 * Math.floor(i / 8);
+				slab_blur.param("tile", tile);
+				slab_blur.param("blur_amount", amt);
+
+				slab_blur.jit_gl_texture(fdbkTex.name);
+				slab_blur.draw();
+
+				fdbkTex.jit_gl_texture(slab_blur.out_name);	
+				amt *= 1.3333333333333333;	
+			}
+
+			outlet(0, "jit_gl_texture", fdbkTex.name);	
+			prevzoomfade = _zoomfade;
+		} else {
+
+			outlet(0, "jit_gl_texture", slab.out_name);	
+		}
 	}
 }

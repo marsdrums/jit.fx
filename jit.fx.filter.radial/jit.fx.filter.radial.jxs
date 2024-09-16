@@ -57,8 +57,10 @@ in jit_PerVertex {
 vec4 blur5(sampler2DRect image) {
   vec4 color = vec4(0.0);
   float randAmount = texelFetch(randTex, ivec2(mod(jit_in.uv, 128) + tile)).w*2;
-  vec2 direction = normalize(jit_in.uv - center);
-  vec2 off1 = vec2(1.3333333333333333) * direction * blur_amount * randAmount;
+  vec2 diffToCenter = jit_in.uv - center;
+  float distToCenter = length(diffToCenter);
+  vec2 direction = diffToCenter / distToCenter;
+  vec2 off1 = vec2(1.3333333333333333) * direction * blur_amount * randAmount * distToCenter / texDim.x;
   color += texture(image, jit_in.uv) * 0.29411764705882354;
   color += texture(image, jit_in.uv + (off1)) * 0.35294117647058826;
   color += texture(image, jit_in.uv - (off1)) * 0.35294117647058826;
