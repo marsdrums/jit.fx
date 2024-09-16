@@ -286,7 +286,7 @@
 
 							}
  ],
-						"originid" : "pat-178"
+						"originid" : "pat-196"
 					}
 ,
 					"patching_rect" : [ 274.0, 127.0, 61.0, 22.0 ],
@@ -503,10 +503,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "dozer.mov",
-								"filename" : "dozer.mov",
+								"absolutepath" : "rca.mov",
+								"filename" : "rca.mov",
 								"filekind" : "moviefile",
-								"id" : "u892003680",
+								"id" : "u171009740",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -719,15 +719,9 @@
 
 			}
  ],
-		"originid" : "pat-176",
+		"originid" : "pat-194",
 		"dependency_cache" : [ 			{
 				"name" : "countdown.mov",
-				"bootpath" : "C74:/media/jitter",
-				"type" : "MooV",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "dozer.mov",
 				"bootpath" : "C74:/media/jitter",
 				"type" : "MooV",
 				"implicit" : 1
@@ -737,6 +731,12 @@
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.transition.rotfade",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "rca.mov",
+				"bootpath" : "C74:/media/jitter",
+				"type" : "MooV",
 				"implicit" : 1
 			}
  ],
