@@ -8,7 +8,7 @@
   	<param name="rotfade" type="float" default="0.0" />
     <param name="texDim0" type="vec2" state="TEXDIM0" />
   	<param name="texDim1" type="vec2" state="TEXDIM1" />
-  	<param name="rotation" type="float" default="1.0" />
+  	<param name="rotation" type="float" default="0.7853981" />
 	<language name="glsl" version="1.5">
 		<bind param="tex0" program="fp" />
 		<bind param="tex1" program="fp" />
