@@ -179,10 +179,10 @@ function jit_gl_texture(inname){
 			}
 
 			outlet(0, "jit_gl_texture", fdbkTex.name);	
+			prevrotfade = _rotfade;
 		} else {
 
 			outlet(0, "jit_gl_texture", slab.out_name);	
 		}
 	}
-	prevrotfade = _rotfade;
 }

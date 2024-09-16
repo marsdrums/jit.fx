@@ -40,6 +40,18 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 334.0, 275.0, 70.0, 22.0 ],
+					"text" : "loadmess 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-30",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
@@ -274,7 +286,7 @@
 
 							}
  ],
-						"originid" : "pat-158"
+						"originid" : "pat-178"
 					}
 ,
 					"patching_rect" : [ 274.0, 127.0, 61.0, 22.0 ],
@@ -564,6 +576,13 @@
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
+					"destination" : [ "obj-26", 0 ],
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-9", 0 ],
 					"source" : [ "obj-10", 0 ]
 				}
@@ -700,7 +719,7 @@
 
 			}
  ],
-		"originid" : "pat-136",
+		"originid" : "pat-176",
 		"dependency_cache" : [ 			{
 				"name" : "countdown.mov",
 				"bootpath" : "C74:/media/jitter",
