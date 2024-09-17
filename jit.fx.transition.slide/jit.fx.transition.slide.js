@@ -127,7 +127,6 @@ var _slidedir = 0;
 var amt;
 var tile = new Array(2);
 
-
 function slide(){
 	_slide = arguments[0];
 	slab.param("slide", _slide);
@@ -144,7 +143,7 @@ function motionblur(){
 }
 
 function bluramount(){
-	_bluramount = arguments[0] * 30;
+	_bluramount = arguments[0] * 10;
 }
 
 function jit_gl_texture(inname){
@@ -165,6 +164,8 @@ function jit_gl_texture(inname){
 
 			fdbkTex.jit_gl_texture(slab.out_name);
 			slab_blur.param("center", [fdbkTex.dim[0]*0.5, fdbkTex.dim[1]*0.5]);
+
+			amt *= fdbkTex.dim[_slidedir]/fdbkTex.dim[1 - _slidedir]
 			
 			for(var i = 0; i < 10; i++){
 
