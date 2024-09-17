@@ -122,7 +122,7 @@ fdbkTex.adapt = 1;
 var _slide = 0.0;
 var prevslide = 0.0;
 var _motionblur = 1;
-var _bluramount = 30;
+var _bluramount = 20;
 var _slidedir = 0;
 var amt;
 var tile = new Array(2);
@@ -143,7 +143,7 @@ function motionblur(){
 }
 
 function bluramount(){
-	_bluramount = arguments[0] * 10;
+	_bluramount = arguments[0] * 20;
 }
 
 function jit_gl_texture(inname){

@@ -40,6 +40,18 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-17",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 329.0, 223.0, 150.0, 33.0 ],
+					"text" : "this value can go past the interval [0; 1]"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-6",
 					"maxclass" : "toggle",
 					"numinlets" : 1,
@@ -314,7 +326,7 @@
 						"originid" : "pat-111"
 					}
 ,
-					"patching_rect" : [ 274.0, 144.0, 61.0, 22.0 ],
+					"patching_rect" : [ 274.0, 140.0, 61.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
