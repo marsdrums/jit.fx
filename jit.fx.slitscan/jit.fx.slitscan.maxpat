@@ -148,9 +148,9 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_gl_texture", "" ],
-					"patching_rect" : [ 431.0, 173.0, 212.0, 22.0 ],
+					"patching_rect" : [ 431.0, 173.0, 223.0, 22.0 ],
 					"style" : "default",
-					"text" : "jit.gl.bfg @basis noise.cell @zoom 25."
+					"text" : "jit.gl.bfg @basis noise.perlin @zoom 30."
 				}
 
 			}
@@ -444,7 +444,7 @@
 
 			}
  ],
-		"originid" : "pat-700",
+		"originid" : "pat-712",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",

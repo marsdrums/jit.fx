@@ -156,7 +156,7 @@ function jit_gl_texture(inname){
 	tex3D.jit_gl_texture(texIn.name);
 
 	slab.activeinput = 0;
-	slab.param("slice", count/_num_slices);
+	slab.param("slice", (count + 0.5)/_num_slices);
 	slab.jit_gl_texture(tex3D.name);
 	slab.draw();
 
