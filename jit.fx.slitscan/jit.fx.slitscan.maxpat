@@ -44,7 +44,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 690.0, 290.0, 58.0, 20.0 ],
+					"patching_rect" : [ 643.0, 278.0, 58.0, 20.0 ],
 					"text" : "time map"
 				}
 
@@ -56,7 +56,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 581.0, 139.0, 79.0, 22.0 ],
+					"patching_rect" : [ 534.0, 127.0, 79.0, 22.0 ],
 					"text" : "prepend time"
 				}
 
@@ -68,7 +68,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 581.0, 106.0, 43.0, 22.0 ],
+					"patching_rect" : [ 534.0, 94.0, 43.0, 22.0 ],
 					"text" : "jit.time"
 				}
 
@@ -80,7 +80,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 478.0, 235.0, 204.0, 160.0 ],
+					"patching_rect" : [ 431.0, 223.0, 204.0, 160.0 ],
 					"sync" : 1
 				}
 
@@ -92,7 +92,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 478.0, 51.0, 47.0, 22.0 ],
+					"patching_rect" : [ 431.0, 39.0, 47.0, 22.0 ],
 					"text" : "jit.bang"
 				}
 
@@ -106,7 +106,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 702.0, 112.0, 115.0, 22.0 ],
+					"patching_rect" : [ 655.0, 100.0, 115.0, 22.0 ],
 					"style" : "default",
 					"text_width" : 60.0
 				}
@@ -121,7 +121,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 680.0, 72.0, 204.0, 22.0 ],
+					"patching_rect" : [ 633.0, 60.0, 204.0, 22.0 ],
 					"style" : "default",
 					"text_width" : 55.333343505859375
 				}
@@ -135,7 +135,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_gl_texture", "" ],
-					"patching_rect" : [ 478.0, 85.0, 84.0, 76.0 ],
+					"patching_rect" : [ 431.0, 73.0, 86.0, 76.0 ],
 					"style" : "default",
 					"text" : "jit.gl.texture @adapt 0 @type float16 @dim 640 480"
 				}
@@ -148,46 +148,9 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_gl_texture", "" ],
-					"patching_rect" : [ 478.0, 185.0, 212.0, 22.0 ],
+					"patching_rect" : [ 431.0, 173.0, 212.0, 22.0 ],
 					"style" : "default",
 					"text" : "jit.gl.bfg @basis noise.cell @zoom 25."
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-25",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 267.0, 134.0, 77.0, 22.0 ],
-					"text" : "loadmess 10"
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"format" : 6,
-					"id" : "obj-23",
-					"maxclass" : "flonum",
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "bang" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 267.0, 165.0, 50.0, 22.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"id" : "obj-24",
-					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 1,
-					"outlettype" : [ "" ],
-					"patching_rect" : [ 270.0, 198.0, 103.0, 22.0 ],
-					"text" : "prepend slitspeed"
 				}
 
 			}
@@ -378,27 +341,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-24", 0 ],
-					"source" : [ "obj-23", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-72", 0 ],
-					"source" : [ "obj-24", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-23", 0 ],
-					"source" : [ "obj-25", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-4", 0 ],
 					"source" : [ "obj-3", 0 ]
 				}
@@ -414,7 +356,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-44", 0 ],
-					"midpoints" : [ 711.5, 178.75, 487.5, 178.75 ],
+					"midpoints" : [ 664.5, 166.75, 440.5, 166.75 ],
 					"source" : [ "obj-40", 0 ]
 				}
 
@@ -422,7 +364,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-44", 0 ],
-					"midpoints" : [ 689.5, 177.5, 487.5, 177.5 ],
+					"midpoints" : [ 642.5, 165.5, 440.5, 165.5 ],
 					"source" : [ "obj-41", 0 ]
 				}
 
@@ -502,7 +444,7 @@
 
 			}
  ],
-		"originid" : "pat-664",
+		"originid" : "pat-700",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",

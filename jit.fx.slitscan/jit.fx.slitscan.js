@@ -124,15 +124,9 @@ var texMap = new JitterObject("jit_gl_texture", drawto);
 texMap.rectangle = 0;
 
 var _num_slices = 80;
-var _slitspeed = 0;
 
 function num_slices(){
 	_num_slices = arguments[0];
-}
-
-function slitspeed(){
-	_slitspeed = arguments[0];
-	slab.param("slitspeed", _slitspeed);
 }
 
 var count = 0;
