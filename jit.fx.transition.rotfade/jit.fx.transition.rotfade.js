@@ -159,12 +159,12 @@ function jit_gl_texture(inname){
 
 		if(_motionblur == 1 && amt != 0){
 
-			amt = Math.abs(amt) * _rotation * 0.1 * _bluramount;
+			amt = Math.abs(amt) * _rotation * 0.4 * _bluramount;
 
 			fdbkTex.jit_gl_texture(slab.out_name);
 			slab_blur.param("center", [fdbkTex.dim[0]*0.5, fdbkTex.dim[1]*0.5]);
 			
-			for(var i = 0; i < 10; i++){
+			for(var i = 0; i < 5; i++){
 
 				tile[0] = 128 * (i % 8);
 				tile[1] = 128 * Math.floor(i / 8);

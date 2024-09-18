@@ -122,7 +122,7 @@ fdbkTex.adapt = 1;
 var _zoomfade = 0.0;
 var prevzoomfade = 0.0;
 var _motionblur = 1;
-var _bluramount = 120;
+var _bluramount = 1;
 var _zoom = 1;
 var amt;
 var tile = new Array(2);
@@ -148,7 +148,7 @@ function motionblur(){
 }
 
 function bluramount(){
-	_bluramount = arguments[0] * 120;
+	_bluramount = arguments[0];
 }
 
 function zoom(){
@@ -170,7 +170,7 @@ function jit_gl_texture(inname){
 
 		if(_motionblur == 1 && amt != 0){
 
-			amt = Math.abs(amt) * _zoom * _bluramount;
+			amt = Math.abs(amt) * _zoom * _bluramount * 120;
 
 			fdbkTex.jit_gl_texture(slab.out_name);
 			slab_blur.param("center", [fdbkTex.dim[0]*0.5, fdbkTex.dim[1]*0.5]);
