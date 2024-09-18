@@ -245,8 +245,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 54.0, 51.0, 183.0, 22.0 ],
-					"text" : "output_texture 1, loop 1, vol 0., 1"
+					"patching_rect" : [ 54.0, 51.0, 236.0, 22.0 ],
+					"text" : "output_texture 1, loop 1, unique 1, vol 0., 1"
 				}
 
 			}
@@ -261,7 +261,8 @@
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
-									"vol" : 0.0
+									"vol" : 0.0,
+									"unique" : 1
 								}
 
 							}
@@ -444,7 +445,7 @@
 
 			}
  ],
-		"originid" : "pat-712",
+		"originid" : "pat-989",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",

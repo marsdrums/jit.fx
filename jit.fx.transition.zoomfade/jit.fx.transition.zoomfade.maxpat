@@ -95,7 +95,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 429.0, 295.0, 70.0, 22.0 ],
-					"text" : "loadmess 4"
+					"text" : "loadmess 1"
 				}
 
 			}
@@ -323,7 +323,7 @@
 
 							}
  ],
-						"originid" : "pat-168"
+						"originid" : "pat-1001"
 					}
 ,
 					"patching_rect" : [ 274.0, 133.0, 61.0, 22.0 ],
@@ -719,7 +719,7 @@
 
 			}
  ],
-		"originid" : "pat-164",
+		"originid" : "pat-999",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",

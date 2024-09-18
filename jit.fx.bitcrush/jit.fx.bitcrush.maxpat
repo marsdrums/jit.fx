@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 646.0, 100.0, 600.0, 881.0 ],
+		"rect" : [ 845.0, 100.0, 600.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -199,10 +199,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "bball.mov",
-								"filename" : "bball.mov",
+								"absolutepath" : "oh.mov",
+								"filename" : "oh.mov",
 								"filekind" : "moviefile",
-								"id" : "u945003337",
+								"id" : "u047001107",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -364,18 +364,18 @@
 
 			}
  ],
-		"originid" : "pat-776",
+		"originid" : "pat-969",
 		"dependency_cache" : [ 			{
-				"name" : "bball.mov",
-				"bootpath" : "C74:/media/jitter",
-				"type" : "MooV",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "jit.fx.bitcrush.js",
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.bitcrush",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "oh.mov",
+				"bootpath" : "C74:/media/jitter",
+				"type" : "MooV",
 				"implicit" : 1
 			}
  ],
