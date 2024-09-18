@@ -110,7 +110,7 @@ var swapCallback = function(event) {
 
 var slab = new JitterObject("jit.gl.slab", drawto);
 slab.file = "jit.fx.delay.jxs";
-slab.inputs = 2;
+slab.inputs = 1;
 
 var tex3D = new JitterObject("jit.gl.texture", drawto);
 tex3D.dim = [1, 1, 1];
