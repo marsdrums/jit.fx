@@ -1,4 +1,4 @@
-autowhatch = 1; inlets = 1; outlets = 1;
+autowhatch = 1; inlets = 2; outlets = 1;
 
 
 //______ GRAB CONTEXT ______________________________________________________________________
@@ -84,9 +84,7 @@ destroyFindCTX.local = 1;
 
 function notifydeleted() {
     destroyFindCTX();
-    slab_ver.freepeer();
-    slab_hor.freepeer();
-    fdbkTex.freepeer();
+    slab.freepeer();
 }
 /*
 // ___ GRAB JIT.WORLD BANG____________________________________________
@@ -108,21 +106,62 @@ var swapCallback = function(event) {
 }
 */
 
-
 var slab = new JitterObject("jit.gl.slab", drawto);
-slab.file = "jit.fx.conway.jxs";
+slab.file = "jit.fx.op.absdiff.jxs";
 slab.inputs = 1;
 
-var fdbkTex = new JitterObject("jit_gl_texture", drawto);
-fdbkTex.adapt = 1;
+var inTex = new JitterObject("jit.gl.texture", drawto);
+inTex.rectangle = 0;
 
+var _value = [0,0,0,0];
+
+function msg_int(x) {
+	if(inlet == 1){
+		_value = [x,x,x,x];
+		slab.param("value", _value);
+		slab.param("use_value", 1);
+	}
+}
+
+function msg_float(x) {
+	if(inlet == 1){
+		_value = [x,x,x,x];
+		slab.param("value", _value);
+		slab.param("use_value", 1);
+	}
+}
+
+function list(){
+	if(inlet == 1){
+		_value = [arguments[0], arguments[1], arguments[2], arguments[3]];
+		slab.param("value", _value);
+		slab.param("use_value", 1);
+	}
+}
+
+function jit_matrix(inname){
+	if(inlet == 1){
+		inTex.jit_matrix(inname);
+		slab.activeinput = 1;
+		slab.jit_gl_texture(inTex.name);
+		slab.param("use_value", 0);		
+	}
+}
 
 function jit_gl_texture(inname){
 
-	fdbkTex.jit_gl_texture(inname);
-	
-	slab.jit_gl_texture(i)
+	if(inlet == 1){
+		inTex.jit_gl_texture(inname);
+		slab.activeinput = 1;
+		slab.jit_gl_texture(inTex.name);
+		slab.param("use_value", 0);
 
+	} else {
 
-	outlet(0, "jit_gl_texture", fdbkTex.name);
+		slab.activeinput = 0;
+		slab.jit_gl_texture(inname);
+		slab.draw();		
+	}
+
+	outlet(0, "jit_gl_texture", slab.out_name);
 }
