@@ -1,0 +1,124 @@
+<jittershader name="randlines">
+  <param name="pos" type="vec3" state="POSITION" />
+  <param name="tex0" type="int" default="0" />
+  <param name="texDim" type="vec2" state="TEXDIM0" />
+  <param name="frame" type="int" state="FRAME" />
+  <param name="radius" type="float" default="10.0" />
+  <param name="alpha" type="float" default="1.0" />
+  <language name="glsl" version="1.5">
+    <bind param="pos" program="vp" />
+    <bind param="tex0" program="gp" />
+    <bind param="texDim" program="vp" />
+    <bind param="texDim" program="gp" />
+    <bind param="frame" program="gp" />
+    <bind param="radius" program="gp" />
+    <bind param="alpha" program="fp" />
+    <program name="vp" type="vertex">
+<![CDATA[
+#version 330 core
+in vec3 pos;
+
+uniform vec2 texDim;
+
+out jit_PerVertex {
+  flat vec2 rectPos;  
+} jit_out;
+
+void main() { 
+  gl_Position = vec4(pos.xy*2 - 1, 0., 1.); 
+  jit_out.rectPos = pos.xy * texDim;
+}
+]]>
+    </program>
+    <program name="gp" type="geometry">
+<![CDATA[
+#version 330 core
+
+layout (points) in;
+layout (line_strip, max_vertices=2) out;
+
+in jit_PerVertex {
+  flat vec2 rectPos;   
+} jit_in[];
+
+out jit_PerVertex {
+  flat vec3 color;  
+};
+
+uniform sampler2DRect tex0;
+uniform int frame;
+uniform vec2 texDim;
+uniform float radius;
+
+//Random functions
+uint wang_hash(inout uint seed)
+{
+    seed = uint(seed ^ uint(61)) ^ uint(seed >> uint(16));
+    seed *= uint(9);
+    seed = seed ^ (seed >> 4);
+    seed *= uint(0x27d4eb2d);
+    seed = seed ^ (seed >> 15);
+    return seed;
+}
+ 
+float RandomFloat01(inout uint seed)
+{
+    return float(wang_hash(seed)) / 4294967296.0;
+}
+
+uint getRandSeed(vec2 uv, int frame){ 
+  return  uint(uv.x*3772) + uint(uv.y*78223) + uint(frame)*uint(26699); 
+}
+
+void main() {
+
+  vec2 currRectPos = jit_in[0].rectPos.xy;
+
+  if(texture(tex0, currRectPos).a == 0) return;
+
+  uint seed = getRandSeed(currRectPos.xy, frame);
+
+  vec2 testUV;
+  for(int i = 0; i < 40; i++){
+
+    testUV = currRectPos + vec2(RandomFloat01(seed)-0.5, RandomFloat01(seed)-0.5)*radius*2;
+
+    if(texture(tex0, testUV).a == 1.0){
+
+      gl_Position = gl_in[0].gl_Position;
+      color = vec3(1.0);
+      EmitVertex();
+
+      gl_Position = vec4((testUV / texDim)*2 - 1, 0, 1);
+      color = vec3(1.0);
+      EmitVertex();
+
+      EndPrimitive();
+      return;
+    }
+  }
+
+  return;
+
+}
+]]>
+    </program>
+    <program name="fp" type="fragment">
+<![CDATA[
+#version 330 core
+
+in jit_PerVertex {
+  flat vec3 color;
+} jit_in;
+
+uniform float alpha;
+
+out vec4 color;
+
+void main() {
+  color = vec4(jit_in.color, alpha);
+} 
+]]>
+    </program>
+  </language>
+</jittershader>
