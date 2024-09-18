@@ -108,7 +108,6 @@ var swapCallback = function(event) {
 
 var slab = new JitterObject("jit.gl.slab", drawto);
 slab.file = "jit.fx.bitcrush.jxs";
-slab.type = "float32";
 slab.inputs = 1;
 
 
