@@ -1,0 +1,150 @@
+<jittershader name="default">
+	<description>Default Slab </description>
+	<param name="tex0" type="int" default="0" />
+	<param name="MVP" type="mat4" state="MODELVIEW_PROJECTION_MATRIX" />
+	<param name="textureMatrix0" type="mat4" state="TEXTURE0_MATRIX" />
+	<param name="pos" type="vec3" state="POSITION" />
+	<param name="uv" type="vec2" state="TEXCOORD" />
+	<param name="dithering" type="int" default="0" />
+	<param name="color_levels" type="int" default="256" />
+
+	<language name="glsl" version="1.5">
+		<bind param="tex0" program="fp" />
+		<bind param="MVP" program="vp" />
+		<bind param="textureMatrix0" program="vp" />
+		<bind param="pos" program="vp" />
+		<bind param="uv" program="vp" />
+		<bind param="dithering" program="fp" />
+		<bind param="color_levels" program="fp" />
+		<program name="vp" type="vertex"  >
+<![CDATA[
+	#version 330 core
+	
+	in vec3 pos;
+	in vec2 uv;
+	out jit_PerVertex {
+		smooth vec2 uv;
+		smooth vec2 uvNorm;
+	} jit_out;
+	uniform mat4 MVP;
+	uniform mat4 textureMatrix0;
+	
+	void main(void) {
+		gl_Position = MVP*vec4(pos, 1.);
+		jit_out.uv = vec2(textureMatrix0*vec4(uv, 0., 1.));
+		jit_out.uvNorm = uv;
+	}
+]]>
+</program>
+
+<program name="fp" type="fragment"  >
+<![CDATA[
+	#version 330 core
+	
+	in jit_PerVertex {
+		smooth vec2 uv;
+		smooth vec2 uvNorm;
+	} jit_in;
+	layout (location = 0) out vec4 outCol;
+	
+	uniform sampler2DRect tex0;
+	uniform int dithering, color_levels;
+
+
+//====================DITHERING====================//
+float uniformNoise(vec2 n){
+    // uniformly distribued, normalized in [0..1[
+    return fract(sin(dot(n, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+float interleavedGradientNoise(vec2 n) {
+    float f = 0.06711056 * n.x + 0.00583715 * n.y;
+    return fract(52.9829189 * fract(f));
+}
+
+float triangleNoise(vec2 n) {
+    // triangle noise, in [-0.5..1.5[ range
+    vec2 p = fract(n * vec2(5.3987, 5.4421));
+    p += dot(p.yx, p.xy + vec2(21.5351, 14.3137));
+
+    float xy = p.x * p.y;
+    // compute in [0..2[ and remap to [-1.0..1.0[
+    float noise = (fract(xy * 95.4307) + fract(xy * 75.04961) - 1.0);
+	return noise;
+}
+
+float triangleRemap(float n) {
+    float origin = n * 2.0 - 1.0;
+    float v = origin / sqrt(abs(origin));
+    v = max(-1.0, v);
+    v -= sign(origin);
+    return v;
+}
+
+vec3 triangleRemap(vec3 n) {
+    return vec3(
+        triangleRemap(n.x),
+        triangleRemap(n.y),
+        triangleRemap(n.z)
+    );
+}
+
+vec3 Dither_Uniform(vec3 col) {
+    float noise = uniformNoise(jit_in.uvNorm);
+    noise = noise - 0.5;
+    return col + noise / (color_levels);
+}
+
+vec3 Dither_Interleaved(vec3 col) {
+    // Jimenez 2014, "Next Generation Post-Processing in Call of Duty"
+    float noise = interleavedGradientNoise(jit_in.uv);
+    noise = noise - 0.5;
+    return col + noise / (color_levels);
+}
+
+vec3 Dither_Vlachos(vec3 col) {
+    // Vlachos 2016, "Advanced VR Rendering"
+    vec3 noise = vec3(dot(vec2(171.0, 231.0), jit_in.uv));
+    noise = fract(noise / vec3(103.0, 71.0, 97.0));
+    noise = noise - 0.5;
+    return col.rgb + (noise / (color_levels));
+}
+
+vec3 Dither_Vlachos_TrianglePDF(vec3 col) {
+    // Vlachos 2016, "Advanced VR Rendering"
+    vec3 noise = vec3(dot(vec2(171.0, 231.0), jit_in.uv));
+    noise = fract(noise / vec3(103.0, 71.0, 97.0));
+    noise = triangleRemap(noise);
+    return col + (noise / (color_levels));
+}
+
+vec3 Dither_TriangleNoise(vec3 col) {
+    // Gjøl 2016, "Banding in Games: A Noisy Rant"
+    vec3 noise = vec3(
+        triangleNoise(jit_in.uvNorm         ) / (color_levels),
+        triangleNoise(jit_in.uvNorm + 0.1337) / (color_levels),
+        triangleNoise(jit_in.uvNorm + 0.3141) / (color_levels)
+    );
+    return col.rgb + noise;
+}
+
+void main(void) {
+
+ 	vec3 	col = 	texture(tex0, jit_in.uv).rgb;
+
+			col =  	dithering == 1 ? Dither_Uniform(col) 				: col;
+			col =  	dithering == 2 ? Dither_Interleaved(col) 			: col;
+			col =  	dithering == 3 ? Dither_Vlachos(col) 				: col;
+			col =  	dithering == 4 ? Dither_Vlachos_TrianglePDF(col) 	: col;
+			col =  	dithering == 5 ? Dither_TriangleNoise(col) 			: col;
+
+			col = 	floor(col * color_levels + vec3(0.5)) / color_levels;
+
+			outCol = vec4(col, 1.);
+
+
+}
+]]>
+		</program>
+	</language>
+</jittershader>
