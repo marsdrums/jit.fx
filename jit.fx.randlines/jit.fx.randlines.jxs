@@ -79,11 +79,11 @@ void main() {
   uint seed = getRandSeed(currRectPos.xy, frame);
 
   vec2 testUV;
-  for(int i = 0; i < 20; i++){
+  for(int i = 0; i < 10; i++){
 
     testUV = currRectPos + vec2(RandomFloat01(seed)-0.5, RandomFloat01(seed)-0.5)*radius*2;
 
-    if(texture(tex0, testUV).a == 1.0){
+    if(texelFetch(tex0, ivec2(testUV)).a == 1.0){
 
       gl_Position = gl_in[0].gl_Position;
       color = vec3(1.0);
