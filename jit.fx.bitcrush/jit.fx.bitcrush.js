@@ -116,7 +116,7 @@ var _color_levels = 256;
 var _dithering = 0;
 
 function color_levels(){
-	_color_levels = Math.max(1, arguments[0]);
+	_color_levels = Math.max(1, arguments[0] - 1);
 	slab.param("color_levels", _color_levels);
 }
 

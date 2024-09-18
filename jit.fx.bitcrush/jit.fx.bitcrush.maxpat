@@ -107,7 +107,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 107.0, 187.0, 70.0, 22.0 ],
-					"text" : "loadmess 2"
+					"text" : "loadmess 3"
 				}
 
 			}
@@ -364,7 +364,7 @@
 
 			}
  ],
-		"originid" : "pat-762",
+		"originid" : "pat-776",
 		"dependency_cache" : [ 			{
 				"name" : "bball.mov",
 				"bootpath" : "C74:/media/jitter",
