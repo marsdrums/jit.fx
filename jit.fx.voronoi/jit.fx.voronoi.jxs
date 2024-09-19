@@ -94,7 +94,7 @@ void main() {
 
   vec2 currRectPos = jit_in[0].rectPos.xy;
   center = currRectPos / texDim;
-  id = currRectPos.x + currRectPos.y*texDim.y;
+  id = floor(currRectPos.x) + floor(currRectPos.y)*texDim.x;
 
   float lum = luma(texture(tex0, currRectPos).rgb);
 

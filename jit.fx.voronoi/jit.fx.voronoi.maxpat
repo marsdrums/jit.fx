@@ -105,7 +105,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 828.0, 657.0, 285.0, 33.0 ],
-					"text" : "with @draw_mode id_distance_center\nThese can be used for further custom manipulations"
+					"text" : "with @draw_mode id_distance_center\nThese can be used for custom voronoi rendering"
 				}
 
 			}
