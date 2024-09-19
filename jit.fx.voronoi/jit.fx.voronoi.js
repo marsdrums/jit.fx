@@ -119,6 +119,7 @@ var _num_edges = 25;
 var _line_width = 1;
 var _start_angle = 0;
 var _complete = 1;
+var _draw_mode = 0;
 
 var inTex = new JitterObject("jit.gl.texture", drawto);
 
@@ -182,6 +183,11 @@ function start_angle(){
 function complete(){
 	_complete = Math.max(0, Math.min(1, arguments[0]));
 	shader.param("complete", _complete);
+}
+
+function draw_mode(){
+	_draw_mode = arguments[0];
+	salb_resolve.param("draw_mode", _draw_mode);
 }
 
 function update_dim(dim){
