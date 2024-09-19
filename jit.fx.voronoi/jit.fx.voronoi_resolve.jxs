@@ -50,7 +50,7 @@ uniform int draw_mode;
 
 vec4 draw_lines(){
 
-	float distance = texture(tex0, jit_in.uv - vec2(line_width,0)).g;
+	float distance = texture(tex0, jit_in.uv).g;
 
 	float a = line_width + distance*line_growth;
 	float b = a * 0.7071067812;
@@ -73,24 +73,18 @@ vec4 draw_lines(){
 }
 
 vec4 draw_colors(){
-	float id = texture(tex0, jit_in.uv - vec2(line_width,0)).r;
+	float id = texture(tex0, jit_in.uv).r;
 	return vec4( sin(vec3(id, id+1, id+2))*0.5 + 0.5, 1.0);
 }
 
-vec4 draw_id(){
-	float id = texture(tex0, jit_in.uv - vec2(line_width,0)).r;
-	return vec4(id,id,id,1);
-}
-
-vec4 draw_distance(){
-	float distance = texture(tex0, jit_in.uv - vec2(line_width,0)).g;
-	return vec4(distance,distance,distance,1);	
+vec4 draw_id_distance_center(){
+	return texture(tex0, jit_in.uv);
 }
 
 
 void main(void) {
 
-	outColor = draw_mode == 0 ? draw_lines() : draw_mode == 1 ? draw_colors() : draw_mode == 2 ? draw_id() : draw_distance();
+	outColor = draw_mode == 0 ? draw_lines() : draw_mode == 1 ? draw_colors() : draw_id_distance_center();
 	
 }
 ]]>
