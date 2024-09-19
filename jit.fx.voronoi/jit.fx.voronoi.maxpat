@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 801.0, 100.0, 600.0, 881.0 ],
+		"rect" : [ 801.0, 100.0, 839.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -39,6 +39,44 @@
 		"subpatcher_template" : "",
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 557.0, 370.0, 77.0, 22.0 ],
+					"text" : "loadmess 25"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "number",
+					"maximum" : 40,
+					"minimum" : 3,
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 557.0, 403.0, 50.0, 22.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-12",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 557.0, 431.0, 119.0, 22.0 ],
+					"text" : "prepend num_edges"
+				}
+
+			}
+, 			{
 				"box" : 				{
 					"id" : "obj-55",
 					"maxclass" : "jit.pwindow",
@@ -434,7 +472,7 @@
 
 											}
  ],
-										"originid" : "pat-196"
+										"originid" : "pat-242"
 									}
 ,
 									"patching_rect" : [ 50.0, 202.0, 49.0, 22.0 ],
@@ -490,7 +528,7 @@
 
 							}
  ],
-						"originid" : "pat-194"
+						"originid" : "pat-240"
 					}
 ,
 					"patching_rect" : [ 3.0, 167.0, 82.0, 22.0 ],
@@ -575,8 +613,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 425.0, 372.0, 46.0, 22.0 ],
-					"text" : "pack i i"
+					"patching_rect" : [ 425.0, 372.0, 88.0, 22.0 ],
+					"text" : "pak 1920 1080"
 				}
 
 			}
@@ -825,6 +863,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-72", 0 ],
+					"source" : [ "obj-12", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-11", 0 ],
 					"source" : [ "obj-13", 0 ]
 				}
@@ -860,6 +905,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-16", 0 ],
 					"source" : [ "obj-20", 0 ]
 				}
@@ -876,6 +928,13 @@
 				"patchline" : 				{
 					"destination" : [ "obj-1", 0 ],
 					"source" : [ "obj-3", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-12", 0 ],
+					"source" : [ "obj-4", 0 ]
 				}
 
 			}
@@ -969,7 +1028,7 @@
 
 			}
  ],
-		"originid" : "pat-126",
+		"originid" : "pat-238",
 		"dependency_cache" : [ 			{
 				"name" : "chickens.mp4",
 				"bootpath" : "C74:/media/jitter",

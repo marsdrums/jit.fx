@@ -113,8 +113,9 @@ var swapCallback = function(event) {
 
 
 var _threshold = 0.8;
-var _radius = 100;
+var _radius = 1;
 var _randomness = 0.05;
+var _num_edges = 25;
 
 var inTex = new JitterObject("jit.gl.texture", drawto);
 
@@ -146,7 +147,7 @@ salb_resolve.inputs = 1;
 
 
 function threshold(){
-	_threshold = arguments[0];
+	_threshold = Math.max(0.01, arguments[0]);
 	shader.param("threshold", _threshold);
 }
 
@@ -158,6 +159,11 @@ function radius(){
 function randomness(){
 	_randomness = arguments[0];
 	shader.param("randomness", _randomness);
+}
+
+function num_edges(){
+	_num_edges = Math.max(3, arguments[0]);
+	shader.param("num_edges", _num_edges);
 }
 
 function update_dim(dim){
