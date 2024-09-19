@@ -77,14 +77,10 @@ vec4 draw_colors(){
 	return vec4( sin(vec3(id, id+1, id+2))*0.5 + 0.5, 1.0);
 }
 
-vec4 draw_id_distance_center(){
-	return texture(tex0, jit_in.uv);
-}
-
 
 void main(void) {
 
-	outColor = draw_mode == 0 ? draw_lines() : draw_mode == 1 ? draw_colors() : draw_id_distance_center();
+	outColor = draw_mode == 0 ? draw_lines() : draw_colors();
 	
 }
 ]]>

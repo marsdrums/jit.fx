@@ -223,9 +223,12 @@ function jit_gl_texture(inname){
 
 	node.draw();
 
-	salb_resolve.jit_gl_texture(node.out_name);
-	salb_resolve.draw();
+	if(_draw_mode < 2){
+		salb_resolve.jit_gl_texture(node.out_name);
+		salb_resolve.draw();
+		outlet(0, "jit_gl_texture", salb_resolve.out_name);		
+	} else {
+		outlet(0, "jit_gl_texture", node.out_name);	
+	}
 
-	//outlet(0, "jit_matrix", uvMat.name);
-	outlet(0, "jit_gl_texture", salb_resolve.out_name);
 }
