@@ -73,9 +73,14 @@ vec4 draw_id(){
 	return vec4(id,id,id,1);
 }
 
+vec4 draw_distance(){
+	float distance = texture(tex0, jit_in.uv - vec2(line_width,0)).g;
+	return vec4(distance,distance,distance,1);	
+}
+
 void main(void) {
 
-	outColor = draw_mode == 0 ? draw_lines() : draw_mode == 1 ? draw_colors() : draw_id();
+	outColor = draw_mode == 0 ? draw_lines() : draw_mode == 1 ? draw_colors() : draw_mode == 2 ? draw_id() : draw_distance();
 	
 }
 ]]>

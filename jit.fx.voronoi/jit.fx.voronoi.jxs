@@ -53,6 +53,7 @@ in jit_PerVertex {
 
 out jit_PerVertex {
   flat float id;  
+  smooth float dist;
 };
 
 uniform sampler2DRect tex0;
@@ -114,6 +115,7 @@ void main() {
   for(int i = num_edges; i >= int(mix(float(num_edges), 0.0, complete)); i--){
 
     gl_Position = pos;
+    dist = 0;
     EmitVertex();
 
     angle += angleStep;
@@ -121,6 +123,7 @@ void main() {
     offset1 = vec2(cos(angle)/ratio, sin(angle))*radius;
 
     gl_Position = pos + vec4(offset0, 1, 0);
+    dist = radius;
     EmitVertex();    
 
     gl_Position = pos + vec4(offset1, 1, 0);
@@ -138,12 +141,13 @@ void main() {
 
 in jit_PerVertex {
   flat float id;
+  smooth float dist;
 } jit_in;
 
 out vec4 color;
 
 void main() {
-  color = vec4(jit_in.id,0,0, 1);
+  color = vec4(jit_in.id,jit_in.dist,0, 1);
 } 
 ]]>
     </program>

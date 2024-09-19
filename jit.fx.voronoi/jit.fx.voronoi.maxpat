@@ -41,7 +41,7 @@
 		"boxes" : [ 			{
 				"box" : 				{
 					"id" : "obj-37",
-					"items" : [ "lines", ",", "color", ",", "id" ],
+					"items" : [ "lines", ",", "color", ",", "id", ",", "distance" ],
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,
