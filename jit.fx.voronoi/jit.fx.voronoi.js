@@ -116,6 +116,9 @@ var _threshold = 0.8;
 var _radius = 1;
 var _randomness = 0.05;
 var _num_edges = 25;
+var _line_width = 1;
+var _start_angle = 0;
+var _complete = 1;
 
 var inTex = new JitterObject("jit.gl.texture", drawto);
 
@@ -164,6 +167,21 @@ function randomness(){
 function num_edges(){
 	_num_edges = Math.max(3, arguments[0]);
 	shader.param("num_edges", _num_edges);
+}
+
+function line_width(){
+	_line_width = arguments[0];
+	salb_resolve.param("line_width", _line_width);
+}
+
+function start_angle(){
+	_start_angle = arguments[0];
+	shader.param("start_angle", _start_angle);
+}
+
+function complete(){
+	_complete = Math.max(0, Math.min(1, arguments[0]));
+	shader.param("complete", _complete);
 }
 
 function update_dim(dim){
