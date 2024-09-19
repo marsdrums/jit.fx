@@ -158,7 +158,7 @@ function threshold(){
 }
 
 function radius(){
-	_radius = arguments[0];
+	_radius = Math.min(2.8284271247, arguments[0]); //limit < 2*sqrt(2)
 	shader.param("radius", _radius);
 }
 
