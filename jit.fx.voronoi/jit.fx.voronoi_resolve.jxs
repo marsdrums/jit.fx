@@ -4,12 +4,16 @@
 	<param name="textureMatrix0" type="mat4" state="TEXTURE0_MATRIX" />
 	<param name="uv" type="vec2" state="TEXCOORD" />
 	<param name="line_width" type="float" default="1" />
+	<param name="line_growth" type="float" default="1" />
+	<param name="line_fade" type="float" default="0.0" />
 	<param name="draw_mode" type="int" default="0" />
 	<language name="glsl" version="1.5">
 		<bind param="tex0" program="fp" />
 		<bind param="textureMatrix0" program="vp" />
 		<bind param="uv" program="vp" />
 		<bind param="line_width" program="fp" />
+		<bind param="line_growth" program="fp" />
+		<bind param="line_fade" program="fp" />
 		<bind param="draw_mode" program="fp" />
 		<program name="vp" type="vertex"  >
 <![CDATA[
@@ -41,26 +45,31 @@ in jit_PerVertex {
 layout (location = 0) out vec4 outColor;
 
 uniform sampler2DRect tex0;
-uniform float line_width;
+uniform float line_width, line_growth, line_fade;
 uniform int draw_mode;
 
 vec4 draw_lines(){
 
-	float diag_width = line_width * 0.7071067812;
+	float distance = texture(tex0, jit_in.uv - vec2(line_width,0)).g;
 
-	if( texture(tex0, jit_in.uv - vec2(line_width,0)).r != texture(tex0, jit_in.uv + vec2(line_width,0)).r ){
-		return vec4(1.0);
+	float a = line_width + distance*line_growth;
+	float b = a * 0.7071067812;
+	float col = 1 / ( distance * line_fade + 1);
+
+	if( texture(tex0, jit_in.uv - vec2(a,0)).r != texture(tex0, jit_in.uv + vec2(a,0)).r ){
+		return vec4(col);
 	}
-	if( texture(tex0, jit_in.uv - vec2(0,line_width)).r != texture(tex0, jit_in.uv + vec2(0,line_width)).r ){
-		return vec4(1.0);
+	if( texture(tex0, jit_in.uv - vec2(0,a)).r != texture(tex0, jit_in.uv + vec2(0,a)).r ){
+		return vec4(col);
 	}
-	if( texture(tex0, jit_in.uv - vec2(diag_width,diag_width)).r != texture(tex0, jit_in.uv + vec2(diag_width,diag_width)).r ){
-		return vec4(1.0);
+	if( texture(tex0, jit_in.uv - vec2(b,b)).r != texture(tex0, jit_in.uv + vec2(b,b)).r ){
+		return vec4(col);
 	}
-	if( texture(tex0, jit_in.uv - vec2(-diag_width,diag_width)).r != texture(tex0, jit_in.uv + vec2(-diag_width,diag_width)).r ){
-		return vec4(1.0);
+	if( texture(tex0, jit_in.uv - vec2(-b,b)).r != texture(tex0, jit_in.uv + vec2(-b,b)).r ){
+		return vec4(col);
 	}
-	return vec4(0.0);
+	return vec4(0.0);	
+
 }
 
 vec4 draw_colors(){
@@ -77,6 +86,7 @@ vec4 draw_distance(){
 	float distance = texture(tex0, jit_in.uv - vec2(line_width,0)).g;
 	return vec4(distance,distance,distance,1);	
 }
+
 
 void main(void) {
 

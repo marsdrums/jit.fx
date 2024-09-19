@@ -120,6 +120,8 @@ var _line_width = 1;
 var _start_angle = 0;
 var _complete = 1;
 var _draw_mode = 0;
+var _line_growth = 0;
+var _line_fade = 1;
 
 var inTex = new JitterObject("jit.gl.texture", drawto);
 
@@ -188,6 +190,16 @@ function complete(){
 function draw_mode(){
 	_draw_mode = arguments[0];
 	salb_resolve.param("draw_mode", _draw_mode);
+}
+
+function line_growth(){
+	_line_growth = arguments[0];
+	salb_resolve.param("line_growth", _line_growth);
+}
+
+function line_fade(){
+	_line_fade = arguments[0];
+	salb_resolve.param("line_fade", _line_fade);
 }
 
 function update_dim(dim){
