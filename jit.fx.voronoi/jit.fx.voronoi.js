@@ -84,12 +84,12 @@ destroyFindCTX.local = 1;
 
 function notifydeleted() {
     destroyFindCTX();
-    slabThreshold.freepeer();
     inTex.freepeer();
     mesh.freepeer();
     node.freepeer();
     uvMat.freepeer();
     shader.freepeer();
+    salb_resolve.freepeer();
 }
 /*
 // ___ GRAB JIT.WORLD BANG____________________________________________
@@ -112,13 +112,9 @@ var swapCallback = function(event) {
 */
 
 
-var _threshold = 0.0;
+var _threshold = 0.8;
 var _radius = 100;
-var _alpha = 1.;
-
-var slabThreshold = new JitterObject("jit.gl.slab", drawto);
-slabThreshold.file = "jit.fx.randlines_threshold.jxs";
-slabThreshold.inputs = 1;
+var _randomness = 0.05;
 
 var inTex = new JitterObject("jit.gl.texture", drawto);
 
@@ -126,11 +122,11 @@ var node = new JitterObject("jit.gl.node", drawto);
 node.adapt = 0;
 node.capture = 1;
 node.erase_color = [0,0,0,0];
-node.dim = [100, 100];
+node.dim = [1920, 1080];
 node.type = "float32";
 
 var shader = new JitterObject("jit.gl.shader", node.name);
-shader.file = "jit.fx.randlines.jxs";
+shader.file = "jit.fx.voronoi.jxs";
 
 var uvMat = new JitterMatrix(3, "float32", 100, 100);
 uvMat.exprfill(0, "norm[0]");
@@ -138,16 +134,20 @@ uvMat.exprfill(1, "norm[1]");
 
 var mesh = new JitterObject("jit.gl.mesh", node.name);
 mesh.draw_mode = "points";
-mesh.blend_enable = 1;
-mesh.depth_enable = 0;
-mesh.texture = slabThreshold.out_name;
+mesh.blend_enable = 0;
+mesh.depth_enable = 1;
+mesh.texture = inTex.name;
 mesh.shader = shader.name;
 mesh.jit_matrix(uvMat.name);
+
+var salb_resolve = new JitterObject("jit.gl.slab", drawto);
+salb_resolve.file = "jit.fx.voronoi_resolve.jxs";
+salb_resolve.inputs = 1;
 
 
 function threshold(){
 	_threshold = arguments[0];
-	slabThreshold.param("threshold", _threshold);
+	shader.param("threshold", _threshold);
 }
 
 function radius(){
@@ -155,19 +155,22 @@ function radius(){
 	shader.param("radius", _radius);
 }
 
-function alpha(){
-	_alpha = arguments[0];
-	shader.param("alpha", _alpha);
+function randomness(){
+	_randomness = arguments[0];
+	shader.param("randomness", _randomness);
 }
 
 function update_dim(dim){
 	if(uvMat.dim[0] != dim[0] || uvMat.dim[1] != dim[1]){
 		uvMat.dim = [ dim[0], dim[1] ];
-		node.dim = [ dim[0], dim[1] ];
 		uvMat.exprfill(0, "norm[0]");
 		uvMat.exprfill(1, "norm[1]");
 		mesh.jit_matrix(uvMat.name);
 	}
+}
+
+function outdim(){
+	node.dim = [ arguments[0], arguments[1] ];
 }
 
 function jit_gl_texture(inname){
@@ -176,11 +179,11 @@ function jit_gl_texture(inname){
 
 	update_dim(inTex.dim);
 
-	slabThreshold.jit_gl_texture(inTex.name);
-	slabThreshold.draw();
-
 	node.draw();
 
+	salb_resolve.jit_gl_texture(node.out_name);
+	salb_resolve.draw();
+
 	//outlet(0, "jit_matrix", uvMat.name);
-	outlet(0, "jit_gl_texture", node.out_name);
+	outlet(0, "jit_gl_texture", salb_resolve.out_name);
 }
