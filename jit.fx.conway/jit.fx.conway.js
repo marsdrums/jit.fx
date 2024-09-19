@@ -84,8 +84,8 @@ destroyFindCTX.local = 1;
 
 function notifydeleted() {
     destroyFindCTX();
-    slab_ver.freepeer();
-    slab_hor.freepeer();
+    slab_evolve.freepeer();
+    slab_comb.freepeer();
     fdbkTex.freepeer();
 }
 /*
@@ -107,22 +107,40 @@ var swapCallback = function(event) {
     }
 }
 */
+var _threshold = 0.5;
 
+var slab_comb = new JitterObject("jit.gl.slab", drawto);
+slab_comb.file = "jit.fx.conway_combine_states.jxs";
+slab_comb.inputs = 2;
 
-var slab = new JitterObject("jit.gl.slab", drawto);
-slab.file = "jit.fx.conway.jxs";
-slab.inputs = 1;
+var slab_evolve = new JitterObject("jit.gl.slab", drawto);
+slab_evolve.file = "jit.fx.conway.jxs";
+slab_evolve.inputs = 1;
 
 var fdbkTex = new JitterObject("jit_gl_texture", drawto);
 fdbkTex.adapt = 1;
+fdbkTex.filter = "nearest";
+
+function threshold(){
+	_threshold = arguments[0];
+	slab_comb.param("threshold", _threshold);
+}
 
 
 function jit_gl_texture(inname){
 
-	fdbkTex.jit_gl_texture(inname);
-	
-	slab.jit_gl_texture(i)
+	slab_comb.activeinput = 1;
+	slab_comb.jit_gl_texture(fdbkTex.name);
 
+	slab_comb.activeinput = 0;
+	slab_comb.jit_gl_texture(inname);
+
+	slab_comb.draw();
+
+	slab_evolve.jit_gl_texture(slab_comb.out_name);
+	slab_evolve.draw();
+
+	fdbkTex.jit_gl_texture(slab_evolve.out_name);
 
 	outlet(0, "jit_gl_texture", fdbkTex.name);
 }

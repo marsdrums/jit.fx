@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 750.0, 117.0, 886.0, 881.0 ],
+		"rect" : [ 373.0, 103.0, 706.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -40,32 +40,69 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-11",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 68.0, 175.0, 87.0, 22.0 ],
+					"text" : "loadmess 0.88"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"format" : 6,
+					"id" : "obj-3",
+					"maxclass" : "flonum",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "bang" ],
+					"parameter_enable" : 0,
+					"patching_rect" : [ 68.0, 204.0, 50.0, 22.0 ]
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 68.0, 236.0, 105.0, 22.0 ],
+					"text" : "prepend threshold"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-73",
 					"maxclass" : "jit.pwindow",
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "jit_matrix", "" ],
-					"patching_rect" : [ 29.0, 376.0, 584.0, 403.0 ],
+					"patching_rect" : [ 29.0, 376.0, 575.0, 463.0 ],
 					"sync" : 1
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"filename" : "jit.fx.filter.conway.js",
+					"filename" : "jit.fx.conway.js",
 					"id" : "obj-72",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 29.0, 285.0, 126.0, 22.0 ],
+					"patching_rect" : [ 29.0, 285.0, 101.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "v8 jit.fx.filter.conway.js",
+					"text" : "v8 jit.fx.conway.js",
 					"textfile" : 					{
-						"filename" : "jit.fx.filter.conway.js",
+						"filename" : "jit.fx.conway.js",
 						"flags" : 0,
 						"embed" : 0,
 						"autowatch" : 1
@@ -102,10 +139,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "chickens.mp4",
-								"filename" : "chickens.mp4",
+								"absolutepath" : "countdown.mov",
+								"filename" : "countdown.mov",
 								"filekind" : "moviefile",
-								"id" : "u070005254",
+								"id" : "u257009883",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -175,8 +212,29 @@
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
+					"destination" : [ "obj-72", 0 ],
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-9", 0 ],
 					"source" : [ "obj-10", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-3", 0 ],
+					"source" : [ "obj-11", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-1", 0 ],
+					"source" : [ "obj-3", 0 ]
 				}
 
 			}
@@ -211,15 +269,15 @@
 
 			}
  ],
-		"originid" : "pat-494",
+		"originid" : "pat-110",
 		"dependency_cache" : [ 			{
-				"name" : "chickens.mp4",
+				"name" : "countdown.mov",
 				"bootpath" : "C74:/media/jitter",
-				"type" : "mpg4",
+				"type" : "MooV",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "jit.fx.filter.conway.js",
+				"name" : "jit.fx.conway.js",
 				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.conway",
 				"patcherrelativepath" : ".",
 				"type" : "TEXT",
