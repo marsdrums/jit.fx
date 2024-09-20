@@ -209,7 +209,7 @@ function num_edges(){
 function line_width(){
 	_line_width = arguments[0];
 	salb_resolve.param("line_width", _line_width);
-	shader_del.param("line_width", _line_width);
+	shader_del.param("line_width", _line_width*2);
 }
 
 function start_angle(){
