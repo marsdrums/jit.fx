@@ -45,28 +45,40 @@ layout (location = 0) out vec4 outColor;
 uniform sampler2DRect tex0;
 uniform float line_width, line_growth, line_fade;
 
+bool toDraw(vec4 lookup0, vec4 lookup1){
+	return lookup0.r != lookup1.r;
+}
+
 vec4 draw_lines(){
 
-	float distance = texture(tex0, jit_in.uv).g;
+	vec4 lookup = texture(tex0, jit_in.uv);
+	//if(lookup.z == 0 && lookup.w == 0) return vec4(0.0);
+
+	float distance = lookup.g;
 
 	float a = line_width + distance*line_growth;
 	float b = a * 0.7071067812;
 	float col = 1 / ( distance * line_fade + 1);
 
-	if( texture(tex0, jit_in.uv - vec2(a,0)).r != texture(tex0, jit_in.uv + vec2(a,0)).r ){
-		return vec4(col);
-	}
-	if( texture(tex0, jit_in.uv - vec2(0,a)).r != texture(tex0, jit_in.uv + vec2(0,a)).r ){
-		return vec4(col);
-	}
-	if( texture(tex0, jit_in.uv - vec2(b,b)).r != texture(tex0, jit_in.uv + vec2(b,b)).r ){
-		return vec4(col);
-	}
-	if( texture(tex0, jit_in.uv - vec2(-b,b)).r != texture(tex0, jit_in.uv + vec2(-b,b)).r ){
-		return vec4(col);
-	}
-	return vec4(0.0);	
+	vec4 lookup0, lookup1;
 
+	lookup0 = texture(tex0, jit_in.uv - vec2(a,0));
+	lookup1 = texture(tex0, jit_in.uv + vec2(a,0));
+	if(toDraw(lookup0, lookup1)) return vec4(col);
+
+	lookup0 = texture(tex0, jit_in.uv - vec2(0,a));
+	lookup1 = texture(tex0, jit_in.uv + vec2(0,a));
+	if(toDraw(lookup0, lookup1)) return vec4(col);
+
+	lookup0 = texture(tex0, jit_in.uv - vec2(b,b));
+	lookup1 = texture(tex0, jit_in.uv + vec2(b,b));
+	if(toDraw(lookup0, lookup1)) return vec4(col);
+
+	lookup0 = texture(tex0, jit_in.uv - vec2(-b,b));
+	lookup1 = texture(tex0, jit_in.uv + vec2(-b,b));
+	if(toDraw(lookup0, lookup1)) return vec4(col);
+
+	return vec4(0.0);	
 }
 
 void main(void) {
