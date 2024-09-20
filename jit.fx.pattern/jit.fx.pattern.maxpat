@@ -497,7 +497,7 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-37",
-					"items" : [ "Voronoi", ",", "Delaunay", ",", "id_distance_center" ],
+					"items" : [ "Voronoi", ",", "Delaunay", ",", "Voronoi", "+", "Delaunay", ",", "id_distance_center" ],
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,
