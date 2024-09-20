@@ -38,8 +38,8 @@ out jit_PerVertex {
 
 void main() { 
   gl_Position = vec4(pos.xy*2 - 1, 0., 1.); 
-  jit_out.uv = vec2(pos.x, 1 - pos.y);
-  jit_out.rectPos = jit_out.uv * texDim;
+  jit_out.uv = pos.xy;//vec2(pos.x, 1 - pos.y);
+  jit_out.rectPos = pos.xy * texDim + 0.5;
 
 }
 ]]>
@@ -50,7 +50,7 @@ void main() {
 #define TWOPI 6.2831853072
 
 layout (points) in;
-layout (triangle_strip, max_vertices=128) out;
+layout (line_strip, max_vertices=3) out;
 
 in jit_PerVertex {
   flat vec2 rectPos;   
@@ -60,7 +60,8 @@ in jit_PerVertex {
 out jit_PerVertex {
   flat float id;  
   smooth float dist;
-  flat vec2 center;
+  //flat vec2 center;
+  smooth vec4 color;
 };
 
 uniform sampler2DRect tex0;
@@ -75,72 +76,29 @@ uniform float start_angle;
 uniform float complete;
 uniform vec2 outdim;
 
-//Random functions
-uint wang_hash(inout uint seed)
-{
-    seed = uint(seed ^ uint(61)) ^ uint(seed >> uint(16));
-    seed *= uint(9);
-    seed = seed ^ (seed >> 4);
-    seed *= uint(0x27d4eb2d);
-    seed = seed ^ (seed >> 15);
-    return seed;
-}
- 
-float RandomFloat01(inout uint seed)
-{
-    return float(wang_hash(seed)) / 4294967296.0;
-}
-
-uint getRandSeed(){ 
-  return  uint(jit_in[0].rectPos.x*3772) + uint(jit_in[0].rectPos.y*78223) + uint(26699); 
-}
-
-float luma(vec3 x){ return dot(x, vec3(0.299, 0.587, 0.114)); }
 
 void main() {
 
-  vec2 currRectPos = jit_in[0].rectPos.xy;
-  id = floor(jit_in[0].uv.x*outdim.x) + floor(jit_in[0].uv.y*outdim.y)*outdim.x;
+    vec4 lookup = texture(tex0, (gl_in[0].gl_Position.xy * 0.5 + 0.5)*texDim);
+    if( (lookup.x == 0.0 && lookup.y == 0.0) || (lookup.z == 0.0 && lookup.w == 0.0) ) return;
 
-  float lum = luma(texture(tex0, currRectPos).rgb);
+    float dist = distance(lookup.xy, lookup.zw);
+    color = vec4(1/(1+dist*10));
 
-  if(lum < threshold) return;
-
-  float ratio = texDim.x / texDim.y;
-
-  float angleStep = TWOPI / float(num_edges);
-  float angle = start_angle;
-  vec2 offset0, offset1;
-
-  offset1 = vec2(radius/ratio, 0);
-
-  //add pos jittering
-  uint seed = getRandSeed();
-  vec4 pos = gl_in[0].gl_Position;
-  pos.x += randomness * (RandomFloat01(seed)*2 - 1)/ratio;
-  pos.y += randomness * (RandomFloat01(seed)*2 - 1);
-  center = pos.xy;
-
-  for(int i = num_edges; i >= int(mix(float(num_edges), 0.0, complete)); i--){
-
-    gl_Position = pos;
-    dist = 0;
+    gl_Position = vec4(lookup.xy, 0.0, 1.0);
+    //color = vec4(0.0);
     EmitVertex();
 
-    angle += angleStep;
-    offset0 = offset1;
-    offset1 = vec2(cos(angle)/ratio, sin(angle))*radius;
+    //gl_Position = vec4(mix(lookup.xy, lookup.zw, 0.5), 0.0, 1.0);
+    //EmitVertex();
 
-    gl_Position = pos + vec4(offset0, 1, 0);
-    dist = radius;
+    gl_Position = vec4(lookup.zw, 0.0, 1.0);
+    //color = vec4(0.0);
     EmitVertex();    
-
-    gl_Position = pos + vec4(offset1, 1, 0);
-    EmitVertex();   
 
     EndPrimitive(); 
 
-  }
+
 }
 ]]>
     </program>
@@ -149,15 +107,16 @@ void main() {
 #version 330 core
 
 in jit_PerVertex {
+  smooth vec4 color;
   flat float id;
   smooth float dist;
-  flat vec2 center;
+  //flat vec2 center;
 } jit_in;
 
 out vec4 color;
 
 void main() {
-  color = vec4(jit_in.id,jit_in.dist,jit_in.center);
+  color = jit_in.color;
 } 
 ]]>
     </program>

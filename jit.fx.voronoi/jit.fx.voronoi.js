@@ -122,8 +122,10 @@ var _complete = 1;
 var _draw_mode = 0;
 var _line_growth = 0;
 var _line_fade = 1;
+var _outdim = [1920, 1080];
 
 var inTex = new JitterObject("jit.gl.texture", drawto);
+inTex.type = "float32";
 
 var node = new JitterObject("jit.gl.node", drawto);
 node.adapt = 0;
@@ -150,6 +152,7 @@ mesh.jit_matrix(uvMat.name);
 var salb_resolve = new JitterObject("jit.gl.slab", drawto);
 salb_resolve.file = "jit.fx.voronoi_resolve.jxs";
 salb_resolve.inputs = 1;
+salb_resolve.type = "float32";
 
 
 function threshold(){
@@ -212,7 +215,9 @@ function update_dim(dim){
 }
 
 function outdim(){
-	node.dim = [ arguments[0], arguments[1] ];
+	_outdim = [ arguments[0], arguments[1] ];
+	node.dim = _outdim;
+	shader.param("outdim", _outdim);
 }
 
 function jit_gl_texture(inname){
