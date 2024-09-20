@@ -11,8 +11,6 @@
   <param name="start_angle" type="float" default="0.0" />
   <param name="complete" type="float" default="1.0" />
   <param name="outdim" type="vec2" default="1920 1080" />
-  <param name="line_width" type="float" default="1.0" />
-  <param name="line_fade" type="float" default="0.0" />
   <language name="glsl" version="1.5">
     <bind param="pos" program="vp" />
     <bind param="tex0" program="gp" />
@@ -26,8 +24,6 @@
     <bind param="start_angle" program="gp" />
     <bind param="complete" program="gp" />
     <bind param="outdim" program="gp" />
-    <bind param="line_width" program="gp" />
-    <bind param="line_fade" program="gp" />
     <program name="vp" type="vertex">
 <![CDATA[
 #version 330 core
@@ -54,7 +50,7 @@ void main() {
 #define TWOPI 6.2831853072
 
 layout (points) in;
-layout (triangle_strip, max_vertices=4) out;
+layout (line_strip, max_vertices=3) out;
 
 in jit_PerVertex {
   flat vec2 rectPos;   
@@ -79,59 +75,25 @@ uniform int num_edges;
 uniform float start_angle;
 uniform float complete;
 uniform vec2 outdim;
-uniform float line_width;
-uniform float line_fade;
 
 
 void main() {
 
+    vec4 lookup = texture(tex0, (gl_in[0].gl_Position.xy * 0.5 + 0.5)*texDim);
+    if( (lookup.x == 0.0 && lookup.y == 0.0) || (lookup.z == 0.0 && lookup.w == 0.0) ) return;
 
-    vec2 uv = (gl_in[0].gl_Position.xy * 0.5 + 0.5)*texDim;
-    vec4 lookup0 = texelFetch(tex0, ivec2(uv));
+    float dist = distance(lookup.xy, lookup.zw);
+    color = vec4(1/(1+dist*10));
 
-    float ratio = texDim.x / texDim.y;
-    float id0 = lookup0.r;
-
-    if(id0 == 0.0) return; //if background
-
-    float dist0 = lookup0.g;
-    vec2 center0 = lookup0.ba;
-    vec2 dir = normalize(gl_in[0].gl_Position.xy*vec2(1,-1) - center0);
-
-    vec4 lookup1 = texelFetch(tex0, ivec2(uv + dir/vec2(ratio, 1.0)));
-    float id1 = lookup1.x;
-
-    if(id0 == id1) return; //if the same cell
-
-    vec2 center1 = lookup1.ba;
-
-    if( (center0.x == 0.0 && center0.y == 0.0) || (center1.x == 0.0 && center1.y == 0.0) ) return;
-/*
-    vec2 middle = floor((mix(center0, center1, 0.5)*0.5 + 0.5) * texDim) + 0.5;
-    vec2 centerDir = normalize(center0 - center1);
-    //vec2 testUV0 = (mix(center0, center1, 0.47)*0.5 + 0.5) * texDim + 0.5;
-    //vec2 testUV1 = (mix(center1, center0, 0.47)*0.5 + 0.5) * texDim + 0.5;
-    float testID0 = texelFetch(tex0, ivec2(middle + centerDir)).x;
-    float testID1 = texelFetch(tex0, ivec2(middle - centerDir)).x;
-
-    if(id0 != testID0 || id1 != testID1) return;
-
-*/
-    float centerDist = distance(center0, center1);
-    color = vec4(1/(1+centerDist*line_fade));
-
-    vec2 width = normalize(cross(normalize(vec3(center0 - center1, 0.0)), vec3(0.0, 0.0, 1.0))).xy*0.001 * line_width;
-
-    gl_Position = vec4(center0 - width, 0.0, 1.0);
+    gl_Position = vec4(lookup.xy, 0.0, 1.0);
+    //color = vec4(0.0);
     EmitVertex();
 
-    gl_Position = vec4(center0 + width, 0.0, 1.0);
-    EmitVertex();  
+    //gl_Position = vec4(mix(lookup.xy, lookup.zw, 0.5), 0.0, 1.0);
+    //EmitVertex();
 
-    gl_Position = vec4(center1 - width, 0.0, 1.0);
-    EmitVertex();
-
-    gl_Position = vec4(center1 + width, 0.0, 1.0);
+    gl_Position = vec4(lookup.zw, 0.0, 1.0);
+    //color = vec4(0.0);
     EmitVertex();    
 
     EndPrimitive(); 
