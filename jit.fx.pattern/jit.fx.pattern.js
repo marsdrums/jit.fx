@@ -87,8 +87,11 @@ function notifydeleted() {
     inTex.freepeer();
     mesh.freepeer();
     node.freepeer();
+    node_del.freepeer();
     uvMat.freepeer();
+    uvMat_del.freepeer();
     shader.freepeer();
+    shader_del.freepeer();
     salb_resolve.freepeer();
 }
 /*
@@ -134,12 +137,26 @@ node.erase_color = [0,0,0,0];
 node.dim = [1920, 1080];
 node.type = "float32";
 
+var node_del = new JitterObject("jit.gl.node", drawto);
+node_del.adapt = 0;
+node_del.capture = 1;
+node_del.erase_color = [0,0,0,0];
+node_del.dim = [1920, 1080];
+node_del.type = "float32";
+
 var shader = new JitterObject("jit.gl.shader", node.name);
-shader.file = "jit.fx.voronoi.jxs";
+shader.file = "jit.fx.pattern.jxs";
+
+var shader_del = new JitterObject("jit.gl.shader", drawto);
+shader_del.file = "jit.fx.pattern_delaunay.jxs";
 
 var uvMat = new JitterMatrix(3, "float32", 100, 100);
 uvMat.exprfill(0, "norm[0]");
 uvMat.exprfill(1, "norm[1]");
+
+var uvMat_del = new JitterMatrix(3, "float32", node_del.dim);
+uvMat_del.exprfill(0, "norm[0]");
+uvMat_del.exprfill(1, "norm[1]");
 
 var mesh = new JitterObject("jit.gl.mesh", node.name);
 mesh.draw_mode = "points";
@@ -149,10 +166,19 @@ mesh.texture = inTex.name;
 mesh.shader = shader.name;
 mesh.jit_matrix(uvMat.name);
 
+var mesh_del = new JitterObject("jit.gl.mesh", node_del.name);
+mesh_del.draw_mode = "points";
+mesh_del.blend_enable = 0;
+mesh_del.depth_enable = 1;
+mesh_del.texture = node.out_name;
+mesh_del.shader = shader_del.name;
+mesh_del.jit_matrix(uvMat_del.name);
+
 var salb_resolve = new JitterObject("jit.gl.slab", drawto);
-salb_resolve.file = "jit.fx.voronoi_resolve.jxs";
+salb_resolve.file = "jit.fx.pattern_resolve.jxs";
 salb_resolve.inputs = 1;
 salb_resolve.type = "float32";
+
 
 
 function threshold(){
@@ -217,7 +243,12 @@ function update_dim(dim){
 function outdim(){
 	_outdim = [ arguments[0], arguments[1] ];
 	node.dim = _outdim;
+	node_del.dim = _outdim;
 	shader.param("outdim", _outdim);
+	uvMat_del.dim = _outdim;
+	uvMat_del.exprfill(0, "norm[0]");
+	uvMat_del.exprfill(1, "norm[1]");
+	mesh_del.jit_matrix(uvMat_del.name);
 }
 
 function jit_gl_texture(inname){
@@ -228,12 +259,19 @@ function jit_gl_texture(inname){
 
 	node.draw();
 
-	if(_draw_mode < 2){
+	switch(_draw_mode) {
+	  case 0:
 		salb_resolve.jit_gl_texture(node.out_name);
 		salb_resolve.draw();
-		outlet(0, "jit_gl_texture", salb_resolve.out_name);		
-	} else {
+		outlet(0, "jit_gl_texture", salb_resolve.out_name);	
+	    break;
+	  case 1:
+		node_del.draw();
+		outlet(0, "jit_gl_texture", node_del.out_name);	
+	    break;
+	  case 2:
 		outlet(0, "jit_gl_texture", node.out_name);	
+	    break;
 	}
 
 }

@@ -79,20 +79,39 @@ uniform vec2 outdim;
 
 void main() {
 
-    vec4 lookup = texture(tex0, (gl_in[0].gl_Position.xy * 0.5 + 0.5)*texDim);
-    if( (lookup.x == 0.0 && lookup.y == 0.0) || (lookup.z == 0.0 && lookup.w == 0.0) ) return;
 
-    float dist = distance(lookup.xy, lookup.zw);
-    color = vec4(1/(1+dist*10));
+    vec2 uv = (gl_in[0].gl_Position.xy * 0.5 + 0.5)*texDim;
+    vec4 lookup0 = texelFetch(tex0, ivec2(uv));
 
-    gl_Position = vec4(lookup.xy, 0.0, 1.0);
+    float ratio = texDim.x / texDim.y;
+    float id0 = lookup0.r;
+
+    if(id0 == 0.0) return; //if background
+
+    float dist0 = lookup0.g;
+    vec2 center0 = lookup0.ba;
+    vec2 dir = normalize(gl_in[0].gl_Position.xy*vec2(1,-1) - center0);
+
+    vec4 lookup1 = texelFetch(tex0, ivec2(uv + dir/vec2(ratio, 1.0)));
+    float id1 = lookup1.x;
+
+    if(id0 == id1) return; //if the same cell
+
+    vec2 center1 = lookup1.ba;
+
+    if( (center0.x == 0.0 && center0.y == 0.0) || (center1.x == 0.0 && center1.y == 0.0) ) return;
+
+    float centerDist = distance(center0, center1);
+    color = vec4(1/(1+centerDist*10));
+
+    gl_Position = vec4(center0, 0.0, 1.0);
     //color = vec4(0.0);
     EmitVertex();
 
     //gl_Position = vec4(mix(lookup.xy, lookup.zw, 0.5), 0.0, 1.0);
     //EmitVertex();
 
-    gl_Position = vec4(lookup.zw, 0.0, 1.0);
+    gl_Position = vec4(center1, 0.0, 1.0);
     //color = vec4(0.0);
     EmitVertex();    
 
