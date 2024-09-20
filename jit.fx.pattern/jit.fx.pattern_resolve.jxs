@@ -4,9 +4,8 @@
 	<param name="textureMatrix0" type="mat4" state="TEXTURE0_MATRIX" />
 	<param name="uv" type="vec2" state="TEXCOORD" />
 	<param name="line_width" type="float" default="1" />
-	<param name="line_growth" type="float" default="1" />
+	<param name="line_growth" type="float" default="0.0" />
 	<param name="line_fade" type="float" default="0.0" />
-	<param name="draw_mode" type="int" default="0" />
 	<language name="glsl" version="1.5">
 		<bind param="tex0" program="fp" />
 		<bind param="textureMatrix0" program="vp" />
@@ -14,7 +13,6 @@
 		<bind param="line_width" program="fp" />
 		<bind param="line_growth" program="fp" />
 		<bind param="line_fade" program="fp" />
-		<bind param="draw_mode" program="fp" />
 		<program name="vp" type="vertex"  >
 <![CDATA[
 #version 330 core
@@ -46,7 +44,6 @@ layout (location = 0) out vec4 outColor;
 
 uniform sampler2DRect tex0;
 uniform float line_width, line_growth, line_fade;
-uniform int draw_mode;
 
 vec4 draw_lines(){
 
@@ -72,15 +69,9 @@ vec4 draw_lines(){
 
 }
 
-vec4 draw_colors(){
-	float id = texture(tex0, jit_in.uv).r;
-	return vec4( sin(vec3(id, id+1, id+2))*0.5 + 0.5, 1.0);
-}
-
-
 void main(void) {
 
-	outColor = draw_mode == 0 ? draw_lines() : draw_colors();
+	outColor =  draw_lines();
 	
 }
 ]]>

@@ -93,6 +93,7 @@ function notifydeleted() {
     shader.freepeer();
     shader_del.freepeer();
     salb_resolve.freepeer();
+    slab_combine.freepeer();
 }
 /*
 // ___ GRAB JIT.WORLD BANG____________________________________________
@@ -115,8 +116,8 @@ var swapCallback = function(event) {
 */
 
 
-var _threshold = 0.8;
-var _radius = 1;
+var _threshold = 0.5;
+var _radius = 0.3;
 var _randomness = 0.05;
 var _num_edges = 25;
 var _line_width = 1;
@@ -179,6 +180,10 @@ salb_resolve.file = "jit.fx.pattern_resolve.jxs";
 salb_resolve.inputs = 1;
 salb_resolve.type = "float32";
 
+var slab_combine = new JitterObject("jit.gl.slab", drawto);
+slab_combine.file = "jit.fx.pattern_combine.jxs";
+slab_combine.inputs = 2;
+slab_combine.type = "float32";
 
 
 function threshold(){
@@ -204,6 +209,7 @@ function num_edges(){
 function line_width(){
 	_line_width = arguments[0];
 	salb_resolve.param("line_width", _line_width);
+	shader_del.param("line_width", _line_width);
 }
 
 function start_angle(){
@@ -218,7 +224,6 @@ function complete(){
 
 function draw_mode(){
 	_draw_mode = arguments[0];
-	salb_resolve.param("draw_mode", _draw_mode);
 }
 
 function line_growth(){
@@ -270,6 +275,17 @@ function jit_gl_texture(inname){
 		outlet(0, "jit_gl_texture", node_del.out_name);	
 	    break;
 	  case 2:
+	  	salb_resolve.jit_gl_texture(node.out_name);
+		salb_resolve.draw();
+		node_del.draw();
+		slab_combine.activeinput = 1;
+		slab_combine.jit_gl_texture(node_del.out_name);
+		slab_combine.activeinput = 0;
+		slab_combine.jit_gl_texture(salb_resolve.out_name);
+		slab_combine.draw();
+		outlet(0, "jit_gl_texture", slab_combine.out_name);	
+	    break;
+	  case 3:
 		outlet(0, "jit_gl_texture", node.out_name);	
 	    break;
 	}
