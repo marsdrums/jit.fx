@@ -131,7 +131,7 @@ function jit_gl_texture(inname){
 	while(texIn.dim[0] > 1){
 
 		texDummy.dim = [	Math.floor((texIn.dim[0] / 2)+0.5), 
-							Math.floor((texIn.dim[1] / 2)+0.5)];
+							texIn.dim[1]];
 
 		slab_hor.activeinput = 1;
 		slab_hor.jit_gl_texture(texIn.name);
@@ -146,7 +146,7 @@ function jit_gl_texture(inname){
 
 	while(texIn.dim[1] > 1){
 
-		texDummy.dim = [	Math.floor((texIn.dim[0] / 2)+0.5), 
+		texDummy.dim = [	texIn.dim[0], 
 							Math.floor((texIn.dim[1] / 2)+0.5)];
 
 		slab_ver.activeinput = 1;

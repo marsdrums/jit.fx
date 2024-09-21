@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 987.0, 100.0, 707.0, 881.0 ],
+		"rect" : [ 987.0, 100.0, 360.0, 881.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -79,20 +79,20 @@
 			}
 , 			{
 				"box" : 				{
-					"filename" : "jit.fx.analysis.min.js",
+					"filename" : "jit.fx.analysis.normalize.js",
 					"id" : "obj-72",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 142.0, 147.0, 127.0, 22.0 ],
+					"patching_rect" : [ 142.0, 147.0, 160.0, 22.0 ],
 					"saved_object_attributes" : 					{
 						"parameter_enable" : 0
 					}
 ,
-					"text" : "v8 jit.fx.analysis.min.js",
+					"text" : "v8 jit.fx.analysis.normalize.js",
 					"textfile" : 					{
-						"filename" : "jit.fx.analysis.min.js",
+						"filename" : "jit.fx.analysis.normalize.js",
 						"flags" : 0,
 						"embed" : 0,
 						"autowatch" : 1
@@ -129,10 +129,10 @@
 				"box" : 				{
 					"data" : 					{
 						"clips" : [ 							{
-								"absolutepath" : "rain.mov",
-								"filename" : "rain.mov",
+								"absolutepath" : "bball.mov",
+								"filename" : "bball.mov",
 								"filekind" : "moviefile",
-								"id" : "u785002050",
+								"id" : "u845004474",
 								"loop" : 1,
 								"content_state" : 								{
 									"loop" : 1,
@@ -255,18 +255,18 @@
 
 			}
  ],
-		"originid" : "pat-18",
+		"originid" : "pat-2",
 		"dependency_cache" : [ 			{
-				"name" : "jit.fx.analysis.min.js",
-				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.analysis.min",
-				"patcherrelativepath" : ".",
-				"type" : "TEXT",
+				"name" : "bball.mov",
+				"bootpath" : "C74:/media/jitter",
+				"type" : "MooV",
 				"implicit" : 1
 			}
 , 			{
-				"name" : "rain.mov",
-				"bootpath" : "C74:/media/jitter",
-				"type" : "MooV",
+				"name" : "jit.fx.analysis.normalize.js",
+				"bootpath" : "~/Documents/GitHub/jit.fx/jit.fx.analysis.normalize",
+				"patcherrelativepath" : ".",
+				"type" : "TEXT",
 				"implicit" : 1
 			}
  ],
