@@ -78,6 +78,7 @@ void main() {
   if(end.x == -1.0) return;
   vec4 posA, posB;
   vec2 dir;
+  float z;
 
   switch (dimmode) {
     case 0:
@@ -90,15 +91,17 @@ void main() {
       break;
     case 2:
       dir = normalize(vec2(texDim.y/texDim.x,1));
-      posA = vec4(end.xy, (end.x+end.y)*0.5, 1.0);
+      z = 1 - (end.y*0.5 + 0.5);//1 - ((end.x*0.5 + 0.5) + (end.y*0.5 + 0.5))*0.5;
+      posA = vec4(end.xy, z, 1.0);
       posB.xy = rayExitBox(posA.xy, dir);
       posB.zw = vec2((posB.x+posB.y)*0.5, 1.0);
       break;
     case 3:
       dir = normalize(vec2(texDim.y/texDim.x,-1));
-      posA = vec4(end.xy, (end.x-end.y)*0.5, 1.0);
+      z = (-end.y*0.5 + 0.5);//1 - ((-end.x*0.5 + 0.5) + (end.y*0.5 + 0.5))*0.5;
+      posA = vec4(end.xy, z, 1.0);
       posB.xy = rayExitBox(posA.xy, dir);
-      posB.zw = vec2((posB.x-posB.y)*0.5, 1.0);
+      posB.zw = vec2((posB.x+posB.y)*0.5, 1.0);
       break;
   }
 
