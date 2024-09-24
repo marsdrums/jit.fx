@@ -122,6 +122,7 @@ var _lo = 0.0;
 var _hi = 0.5;
 var _dimmode = 0; 
 var _colormode = 0; 
+var _outputmode = 0;
 
 var inTex = new JitterObject("jit.gl.texture", drawto);
 inTex.rectangle = 1;
@@ -228,6 +229,10 @@ function hi() {
 	slab_threshold.param("hi", _hi);
 }
 
+function outputmode() {
+	_outputmode = arguments[0];
+}
+
 function update_dim(){
 
 	if(inMat.dim[0] != inTex.dim[0] || inMat.dim[1] != inTex.dim[1]){
@@ -265,13 +270,17 @@ function jit_gl_texture(inname){
 
 	node_makeline.draw();
 
-	slab_composite.activeinput = 1;
-	slab_composite.jit_gl_texture(node_makeline.out_name);
-	slab_composite.activeinput = 0;
-	slab_composite.jit_gl_texture(fdbkTex.name);
-	slab_composite.draw();
-
-	outlet(0, "jit_gl_texture", slab_composite.out_name);
+	if(_outputmode == 0){
+		slab_composite.activeinput = 1;
+		slab_composite.jit_gl_texture(node_makeline.out_name);
+		slab_composite.activeinput = 0;
+		slab_composite.jit_gl_texture(fdbkTex.name);
+		slab_composite.draw();
+	
+		outlet(0, "jit_gl_texture", slab_composite.out_name);		
+	} else {
+		outlet(0, "jit_gl_texture", node_makeline.out_name);		
+	}
 
 	fdbkTex.jit_gl_texture(inTex.name);
 }

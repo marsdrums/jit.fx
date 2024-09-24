@@ -47,12 +47,28 @@ in jit_PerVertex {
 
 void main(void) 
 {
-	vec2 offset = dimmode == 0 ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+	vec2 offset;
+	
+  	switch (dimmode) {
+    case 0:   	
+      	offset = vec2(1.0, 0.0);
+      	break;
+    case 1:
+      	offset = vec2(0.0, 1.0);
+      	break;
+    case 2:
+      	offset = vec2(1.0, 1.0);
+      	break;
+    case 3:
+      	offset = vec2(1.0, -1.0);
+      	break;
+  	}
+
 	float prev = texelFetch(tex0, ivec2(jit_in.uv - offset)).r;
 	float curr = texelFetch(tex0, ivec2(jit_in.uv)).r;
 	float next = texelFetch(tex0, ivec2(jit_in.uv + offset)).r;
 
-	if(prev == 0 && next == 0) curr == 0;
+	//if(prev == 0 && next == 0) curr == 0;
 	outColor.rg = curr < next ? vec2(1) : vec2(0);
 	outColor.ba = curr > next ? jit_in.pos : vec2(-1.0);
 }

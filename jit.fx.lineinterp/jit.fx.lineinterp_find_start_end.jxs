@@ -7,6 +7,7 @@
     <bind param="pos" program="vp" />
     <bind param="tex0" program="gp" />
     <bind param="texDim" program="vp" />
+    <bind param="texDim" program="gp" />
     <bind param="dimmode" program="gp" />
     <program name="vp" type="vertex">
 <![CDATA[
@@ -44,6 +45,30 @@ out jit_PerVertex {
 
 uniform sampler2DRect tex0;
 uniform int dimmode;
+uniform vec2 texDim;
+
+vec2 rayExitBox(vec2 origin, vec2 direction) {
+    // Box bounds
+    vec2 minBounds = vec2(-1.0, -1.0);
+    vec2 maxBounds = vec2(1.0, 1.0);
+    
+    // Calculate intersection times for x and y planes
+    //float tMinX = (minBounds.x - origin.x) / direction.x;
+    float tMaxX = (maxBounds.x - origin.x) / direction.x;
+    //float tMinY = (minBounds.y - origin.y) / direction.y;
+    float tMaxY = (maxBounds.y - origin.y) / direction.y;
+    
+    // Ensure tMinX <= tMaxX and tMinY <= tMaxY
+    //if (tMinX > tMaxX) swap(tMinX, tMaxX);
+    //if (tMinY > tMaxY) swap(tMinY, tMaxY);
+    
+    // Find the maximum of the minimum intersection times (where the ray exits the box)
+    float tExit = min(tMaxX, tMaxY);
+    
+    // Compute the exit point using the ray equation: P = origin + t * direction
+    return origin + tExit * direction;
+}
+
 
 
 void main() {
@@ -51,11 +76,36 @@ void main() {
   end = texelFetch(tex0, ivec2(jit_in[0].rectPos)).ba;
 
   if(end.x == -1.0) return;
+  vec4 posA, posB;
+  vec2 dir;
 
-  gl_Position = dimmode == 0 ? vec4(end.xyx, 1.0) : vec4(end.xyy, 1.0);
+  switch (dimmode) {
+    case 0:
+      posA = vec4(end.xyx, 1.0);
+      posB = vec4(-1.0, end.yx, 1.0);
+      break;
+    case 1:
+      posA = vec4(end.xyy, 1.0);
+      posB = vec4(end.x, -1.0, end.y, 1.0);
+      break;
+    case 2:
+      dir = normalize(vec2(texDim.y/texDim.x,1));
+      posA = vec4(end.xy, (end.x+end.y)*0.5, 1.0);
+      posB.xy = rayExitBox(posA.xy, dir);
+      posB.zw = vec2((posB.x+posB.y)*0.5, 1.0);
+      break;
+    case 3:
+      dir = normalize(vec2(texDim.y/texDim.x,-1));
+      posA = vec4(end.xy, (end.x-end.y)*0.5, 1.0);
+      posB.xy = rayExitBox(posA.xy, dir);
+      posB.zw = vec2((posB.x-posB.y)*0.5, 1.0);
+      break;
+  }
+
+  gl_Position = posA;
   EmitVertex();    
 
-  gl_Position = dimmode == 0 ? vec4(-1.0, end.yx, 1.0) : vec4(end.x, -1.0, end.y, 1.0);
+  gl_Position = posB;
   EmitVertex();   
 
   EndPrimitive(); 
