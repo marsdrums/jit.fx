@@ -1,0 +1,119 @@
+<jittershader name="fill-flat-quads">
+	<description>Default Shader </description>
+	<param name="position" type="vec3" state="POSITION" />
+	<param name="MVP" type="mat4" state="MODELVIEW_PROJECTION_MATRIX" />
+	<param name="video" type="int" default="0" />
+	<param name="rotation" type="float" default="1." />
+	<param name="filter_amt" type="float" default="0.85" />
+	<param name="step" type="float" default="1." />
+	<param name="rotation_offset" type="float" default="0." />
+	<language name="glsl" version="1.5">
+		<bind param="position" program="vp" />
+		<bind param="MVP" program="gp" />
+		<bind param="video" program="gp" />
+		<bind param="rotation" program="gp" />
+		<bind param="filter_amt" program="gp" />
+		<bind param="step" program="gp" />
+		<bind param="rotation_offset" program="gp" />
+		<program name="vp" type="vertex">
+<![CDATA[
+#version 330 core
+in vec3 position;
+
+out jit_PerVertex {
+	flat vec4 color;	
+} jit_out;
+
+void main() {	
+	gl_Position = vec4(position, 1.);	
+	jit_out.color = vec4(1., 1., 1., 1.);
+}
+]]>
+		</program>
+		<program name="gp" type="geometry">
+<![CDATA[
+#version 330 core
+#define TWOPI 6.283
+#define ratio 1.7777777777777777
+
+layout (points) in;
+layout (line_strip, max_vertices=128) out;
+
+uniform sampler2DRect video;
+uniform mat4 MVP;
+uniform float rotation;
+uniform float filter_amt;
+uniform float step;
+uniform float rotation_offset; //i added this variable to decide the starting angle for the lines
+
+in jit_PerVertex {
+	flat vec4 color;	
+} jit_in[];
+
+out jit_PerVertex {
+	smooth vec4 color;	
+};
+
+void main() {
+
+	float angle;
+	float prev_angle;
+	vec2 offset;
+	int i;
+	vec4 lineColor;
+
+	vec4 outPos = gl_in[0].gl_Position;
+	vec2 coord = vec2( (outPos.x / ratio) * 0.5 + 0.5, 
+						outPos.y * 0.5 + 0.5);
+
+	coord *= vec2(1919., 1019.);
+	lineColor = texture(video, coord);
+
+	gl_Position = MVP * outPos;
+	color = vec4(lineColor.rgb, 0.2);
+	EmitVertex();
+
+	angle = lineColor.a * rotation * TWOPI + rotation_offset;
+	offset = vec2( cos(angle) / 1920., sin(angle) /1080. ) * step;
+	prev_angle = angle;
+
+	for(i = 0; i < 128; i++){
+
+		outPos += vec4(offset, 0., 0.);
+		coord = vec2( (outPos.x / ratio) * 0.5 + 0.5, 
+						outPos.y * 0.5 + 0.5);
+
+		coord *= vec2(1919., 1019.);
+
+		lineColor = texture(video, coord);
+
+		gl_Position = MVP * outPos;
+		color = vec4(1., 1., 1., lineColor.a  * 0.1 * (1. - (i / 127.)));
+		EmitVertex();
+
+		angle = mix(lineColor.a * rotation * TWOPI, prev_angle + rotation_offset, filter_amt);
+		offset = vec2( cos(angle) / 1920., sin(angle) /1080. ) * step;
+		prev_angle = angle;
+	}
+	
+	EndPrimitive();
+}
+]]>
+		</program>
+		<program name="fp" type="fragment">
+<![CDATA[
+#version 330 core
+
+in jit_PerVertex {
+	smooth vec4 color;
+} jit_in;
+
+out vec4 color;
+
+void main() {
+	color = jit_in.color;
+}	
+]]>
+		</program>
+	</language>
+</jittershader>
